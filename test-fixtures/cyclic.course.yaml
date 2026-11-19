@@ -1,0 +1,24 @@
+schema_version: "1.0"
+id: cyclic-course
+title: Cyclic Course
+author: SpecLearn Team
+tier: official
+level: intermediate
+estimated_hours: 2
+modules:
+  - id: alpha
+    title: Alpha
+    prerequisites: [beta]
+    universal_concepts: [A]
+    arch_context: [Runtime]
+    verification:
+      test_command: pnpm test
+      rubric_checks: [Pass]
+  - id: beta
+    title: Beta
+    prerequisites: [alpha]
+    universal_concepts: [B]
+    arch_context: [Runtime]
+    verification:
+      test_command: pnpm test
+      rubric_checks: [Pass]
