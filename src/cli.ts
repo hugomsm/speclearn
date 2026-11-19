@@ -16,6 +16,7 @@ import {
 } from "./state/progress.js";
 import { startCourse } from "./sandbox/start.js";
 import { skipModule } from "./sandbox/skip.js";
+import { lockModuleTests, verifyModule } from "./commands/verify.js";
 
 export const VERSION = "0.1.0";
 
@@ -151,6 +152,50 @@ export function createCli(): Command {
         }
         console.log(renderProgressBar(state));
         console.log(renderDagStatus(state));
+      } catch (error) {
+        clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("verify")
+    .description("Run deterministic verification for a course module")
+    .argument("[module-id]", "module ID; defaults to the active module")
+    .action(async (moduleId?: string) => {
+      try {
+        const result = await verifyModule(process.cwd(), moduleId);
+        if (result.integrityErrors.length > 0) {
+          clack.log.error(pc.red("Test integrity verification failed"));
+          for (const error of result.integrityErrors) {
+            clack.log.message(pc.yellow(error));
+          }
+          process.exitCode = 1;
+          return;
+        }
+        if (!result.completed) {
+          clack.log.error(pc.red("Module verification failed"));
+          if (result.stdout) console.log(result.stdout);
+          if (result.stderr) console.log(result.stderr);
+          process.exitCode = result.exitCode === -1 ? 1 : result.exitCode || 1;
+          return;
+        }
+        clack.outro(pc.green(`Verified and completed ${result.moduleId}`));
+        console.log(renderDagStatus(await readProgress(process.cwd()) ?? { active_course_id: result.courseId, sandbox: {}, modules: [] }));
+      } catch (error) {
+        clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("lock-tests")
+    .description("Lock SHA-256 hashes for a module's test files")
+    .argument("[module-id]", "module ID; defaults to the active module")
+    .action(async (moduleId?: string) => {
+      try {
+        const result = await lockModuleTests(process.cwd(), moduleId);
+        clack.outro(pc.green(`Locked test files for ${result.moduleId}`));
       } catch (error) {
         clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
         process.exitCode = 1;

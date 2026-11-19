@@ -164,6 +164,20 @@ Record demonstrated mastery without marking the module as deterministically comp
 speclearn skip types-and-values
 ```
 
+Lock a module's test files before starting work:
+
+```sh
+speclearn lock-tests types-and-values
+```
+
+Run deterministic verification:
+
+```sh
+speclearn verify types-and-values
+```
+
+Verification only completes a module when the test command exits with code 0 and every locked test file still matches its SHA-256 hash. Direct edits to `progress.json` cannot mark a module completed.
+
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md), follow the Code of Conduct, and use the issue and pull request templates.

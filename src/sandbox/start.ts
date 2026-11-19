@@ -49,6 +49,7 @@ export async function startCourse(projectRoot: string, coursePath: string): Prom
 
   const progress: ProgressState = {
     active_course_id: course.id,
+    active_course_path: coursePath,
     sandbox,
     modules,
   };

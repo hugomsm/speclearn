@@ -14,11 +14,13 @@ export const progressModuleSchema = z.object({
   id: z.string().min(1),
   status: moduleStatusSchema,
   test_file_sha256: z.record(z.string()).optional(),
+  verification_signature: z.string().min(1).optional(),
   completed_at: z.string().datetime().optional(),
 });
 
 export const progressStateSchema = z.object({
   active_course_id: z.string().nullable().default(null),
+  active_course_path: z.string().optional(),
   sandbox: z
     .object({
       branch: z.string().optional(),
@@ -52,6 +54,12 @@ export async function readProgress(projectRoot: string): Promise<ProgressState |
 }
 
 export async function writeProgress(projectRoot: string, state: ProgressState): Promise<void> {
+  const completedWithoutEvidence = state.modules.find(
+    (module) => module.status === "completed" && (!module.verification_signature || !module.test_file_sha256),
+  );
+  if (completedWithoutEvidence) {
+    throw new Error(`Completed module ${completedWithoutEvidence.id} lacks verification evidence`);
+  }
   const parsed = progressStateSchema.parse(state);
   const target = progressPath(projectRoot);
   await mkdir(dirname(target), { recursive: true });
@@ -87,7 +95,9 @@ export function renderDagStatus(state: ProgressState): string {
   const lines = [state.active_course_id];
   state.modules.forEach((module, index) => {
     const connector = index === state.modules.length - 1 ? "└──" : "├──";
-    lines.push(`${connector} ${module.id}: ${module.status}`);
+    const evidence =
+      module.status === "completed" && module.verification_signature ? " [verified]" : "";
+    lines.push(`${connector} ${module.id}: ${module.status}${evidence}`);
   });
   return lines.join("\n");
 }

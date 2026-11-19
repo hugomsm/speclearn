@@ -28,6 +28,8 @@ describe("speclearn CLI", () => {
     expect(commandNames).toContain("start");
     expect(commandNames).toContain("skip");
     expect(commandNames).toContain("validate");
+    expect(commandNames).toContain("verify");
+    expect(commandNames).toContain("lock-tests");
     expect(program.commands.find((command) => command.name() === "validate")?.helpInformation()).toContain("<path>");
   });
 });
