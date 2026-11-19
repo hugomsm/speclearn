@@ -7,7 +7,7 @@ context: |
   Language Policy: All source code, comments, CLI outputs, OpenSpec artifacts, and documentation MUST be written in clear, idiomatic English.
 
   Tech Stack (Strict):
-  - Runtime & Language: Node.js (>= 20 LTS) + TypeScript 5.x (Strict mode, ESM modules).
+  - Runtime & Language: Node.js (>= 24 LTS) + TypeScript 5.x (Strict mode, ESM modules).
   - Package Manager: pnpm.
   - Build Tool: tsup (bundles CLI into a single fast ESM executable `dist/cli.js` with `#!/usr/bin/env node`).
   - CLI & Terminal UI: `commander` + `@clack/prompts` + `picocolors`.

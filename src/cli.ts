@@ -7,6 +7,13 @@ import {
   formatCourseSpecIssues,
   loadSpec,
 } from "./parser/load-spec.js";
+import { initializeWorkspace, parseAgentIds } from "./init/initialize.js";
+import {
+  createEmptyProgress,
+  readProgress,
+  renderDagStatus,
+  renderProgressBar,
+} from "./state/progress.js";
 
 export const VERSION = "0.1.0";
 
@@ -46,6 +53,73 @@ export function createCli(): Command {
             pc.red(error instanceof Error ? error.message : String(error)),
           );
         }
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("init")
+    .description("Initialize SpecLearn in the current project")
+    .option("--agents <agents>", "comma-separated agents: claude,copilot,gemini,cursor")
+    .option("--yes", "accept the selected agents without prompting")
+    .action(async (options: { agents?: string; yes?: boolean }) => {
+      try {
+        let agentIds: string[];
+        if (options.agents) {
+          agentIds = parseAgentIds(options.agents);
+          if (!options.yes && process.stdin.isTTY) {
+            const confirm = await clack.confirm({
+              message: `Initialize adapters: ${agentIds.join(", ")}?`,
+              initialValue: true,
+            });
+            if (clack.isCancel(confirm) || !confirm) {
+              clack.cancel("Initialization cancelled");
+              return;
+            }
+          }
+        } else if (process.stdin.isTTY && !options.yes) {
+          const selected = await clack.multiselect({
+            message: "Select coding agents",
+            options: [
+              { value: "claude", label: "Claude Code" },
+              { value: "copilot", label: "GitHub Copilot" },
+              { value: "gemini", label: "Gemini CLI" },
+              { value: "cursor", label: "Cursor" },
+            ],
+            required: false,
+          });
+          if (clack.isCancel(selected)) {
+            clack.cancel("Initialization cancelled");
+            return;
+          }
+          agentIds = selected as string[];
+        } else {
+          agentIds = [];
+        }
+
+        await initializeWorkspace({ projectRoot: process.cwd(), agents: agentIds });
+        await createEmptyProgress(process.cwd());
+        clack.outro(pc.green("SpecLearn workspace initialized"));
+      } catch (error) {
+        clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("status")
+    .description("Display local SpecLearn learning progress")
+    .action(async () => {
+      try {
+        const state = await readProgress(process.cwd());
+        if (!state) {
+          clack.log.warning("No progress state found. Run speclearn init first.");
+          return;
+        }
+        console.log(renderProgressBar(state));
+        console.log(renderDagStatus(state));
+      } catch (error) {
+        clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
         process.exitCode = 1;
       }
     });
