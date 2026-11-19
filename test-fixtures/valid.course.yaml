@@ -1,0 +1,18 @@
+schema_version: "1.0"
+id: typescript-basics
+title: TypeScript Basics
+author: SpecLearn Team
+tier: official
+level: beginner
+estimated_hours: 4
+modules:
+  - id: types-and-values
+    title: Types and Values
+    universal_concepts:
+      - Static typing
+    arch_context:
+      - JavaScript runtime
+    verification:
+      test_command: pnpm test
+      rubric_checks:
+        - Uses explicit types

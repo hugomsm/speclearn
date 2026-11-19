@@ -51,6 +51,17 @@ Run the CLI without arguments to display the SpecLearn banner and help:
 speclearn
 ```
 
+Validate a course document in Markdown or YAML format:
+
+```sh
+speclearn validate ./courses/typescript.course.md
+speclearn validate ./courses/typescript.course.yaml
+```
+
+Markdown courses use YAML frontmatter and the Markdown body as the pedagogical guide. Pure `.course.yaml` and `.yml` files use the same COURSE-SPEC model.
+
+The IDE-compatible JSON Schema is published at `schemas/course-spec.v1.schema.json`.
+
 ## Local Development
 
 Clone the repository and install dependencies:
