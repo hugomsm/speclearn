@@ -25,6 +25,8 @@ describe("speclearn CLI", () => {
 
     expect(commandNames).toContain("init");
     expect(commandNames).toContain("status");
+    expect(commandNames).toContain("start");
+    expect(commandNames).toContain("skip");
     expect(commandNames).toContain("validate");
     expect(program.commands.find((command) => command.name() === "validate")?.helpInformation()).toContain("<path>");
   });

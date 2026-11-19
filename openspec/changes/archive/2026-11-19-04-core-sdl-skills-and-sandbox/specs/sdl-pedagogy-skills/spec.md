@@ -1,0 +1,81 @@
+# Spec Delta
+
+## Purpose
+The core SDL skills define consistent multilingual, Socratic, course-authoring, and skill behavior across all supported coding-agent harnesses.
+
+## ADDED Requirements
+
+### Requirement: Universal language mirroring
+Every core skill template SHALL instruct the agent to conduct mentoring in the language used by the student or active COURSE-SPEC while keeping framework internals and schema keys in English.
+
+#### Scenario: Student prompt uses Portuguese
+- **WHEN** the student prompt or active course content establishes Portuguese as the learning language
+- **THEN** the agent SHALL use Portuguese for explanations, questions, feedback, and code reviews
+- **AND** SHALL keep framework identifiers and schema keys English
+
+#### Scenario: Course language differs from interface language
+- **WHEN** the active COURSE-SPEC specifies a locale or uses non-English pedagogical content
+- **THEN** the agent SHALL mirror that active course language unless the student explicitly selects another language
+
+### Requirement: Propose skill workflow
+The `/slx:propose` skill SHALL inspect the repository, ask no more than three calibration questions, generate a valid course spec, and validate it.
+
+#### Scenario: Repository author proposes a course
+- **WHEN** the agent receives `/slx:propose`
+- **THEN** it SHALL inspect the repository stack, structure, and configured MCP resources
+- **AND** SHALL ask at most one short question for target seniority, learning goal, and Markdown versus YAML preference
+
+#### Scenario: Course spec is generated
+- **WHEN** repository context and calibration answers are available
+- **THEN** the agent SHALL generate `.speclearn/specs/.course.md` or the selected YAML equivalent
+- **AND** SHALL separate universal concepts from architecture-specific context
+
+#### Scenario: Generated spec is validated
+- **WHEN** the course file has been generated
+- **THEN** the skill SHALL run `npx speclearn validate <path>` or its equivalent package invocation
+- **AND** SHALL report validation failures before declaring the proposal ready
+
+### Requirement: Start skill Socratic loop
+The `/slx:start` skill SHALL guide learning through measurement, planning, and scaffolded teaching stages.
+
+#### Scenario: Diagnostic measurement begins
+- **WHEN** the student starts a module
+- **THEN** the skill SHALL present a three-minute diagnostic challenge
+- **AND** SHALL recommend `npx speclearn skip <module>` only when mastery is demonstrated
+
+#### Scenario: Tailored path is planned
+- **WHEN** a module is measured
+- **THEN** the skill SHALL display the remaining prerequisite-aware module path
+
+#### Scenario: Teaching begins
+- **WHEN** the student is ready to learn
+- **THEN** the skill SHALL connect universal concepts to architecture context
+- **AND** SHALL use MCP or repository documentation only when configured
+
+#### Scenario: Exercise is scaffolded
+- **WHEN** the skill prepares a lab exercise
+- **THEN** it SHALL insert `# TODO(speclearn)` markers and failing tests instead of full solution code
+- **AND** SHALL withhold complete solution code until the verification boundary is reached
+
+### Requirement: Explain skill workflow
+The `/slx:explain [concept]` skill SHALL pause the project lab and teach a concept in an isolated scratchpad before returning.
+
+#### Scenario: Scratchpad example is requested
+- **WHEN** the student invokes `/slx:explain` with a concept
+- **THEN** the skill SHALL create a minimal runnable example under `.speclearn/scratchpad/`
+- **AND** SHALL keep the main lab unchanged
+
+#### Scenario: Scratchpad concept is understood
+- **WHEN** the isolated example is understood
+- **THEN** the skill SHALL summarize the concept and return smoothly to the main lab context
+
+### Requirement: Verify skill boundary
+The `/slx:verify` skill SHALL only recognize deterministic test success and test-file integrity as completion evidence.
+
+#### Scenario: Verification succeeds
+- **WHEN** the declared test command exits successfully and test-file hashes remain intact
+- **THEN** the skill SHALL invoke the SpecLearn verification boundary and report completion eligibility
+
+#### Scenario: Verification is inconclusive
+- **WHEN** tests fail or test-file integrity cannot be verified
+- **THEN** the skill SHALL not mark the module completed

@@ -141,6 +141,29 @@ openspec/changes/      Active and archived change plans
 .changeset/            Semantic release metadata
 ```
 
+## Spec-Driven Learning skills
+
+The initialized agent adapters expose the `/slx:*` workflows:
+
+- `/slx:propose` — inspect the repository and create a valid course specification
+- `/slx:start` — measure, plan, and scaffold the active learning module
+- `/slx:explain [concept]` — use an isolated example in `.speclearn/scratchpad/`
+- `/slx:verify` — validate tests and test-file integrity before completion
+
+All mentoring is mirrored to the student's or active course's language while framework identifiers remain English.
+
+Start a course with safe sandbox isolation:
+
+```sh
+speclearn start ./courses/typescript.course.yaml
+```
+
+Record demonstrated mastery without marking the module as deterministically completed:
+
+```sh
+speclearn skip types-and-values
+```
+
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md), follow the Code of Conduct, and use the issue and pull request templates.

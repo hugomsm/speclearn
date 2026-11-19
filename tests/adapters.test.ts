@@ -62,4 +62,28 @@ describe("SpecLearn agent adapters", () => {
     });
     expect(registry.get("community-agent")?.name).toBe("Community Agent");
   });
+
+  it("includes complete SDL skill content in every built-in adapter", async () => {
+    const root = await mkdtemp(join(tmpdir(), "speclearn-sdl-adapters-"));
+
+    try {
+      const registry = createBuiltInAdapterRegistry();
+      await registry.get("claude")?.apply(root);
+      await registry.get("copilot")?.apply(root);
+      await registry.get("gemini")?.apply(root);
+      await registry.get("cursor")?.apply(root);
+
+      const claudePropose = await readFile(join(root, ".claude", "commands", "slx", "propose.md"), "utf8");
+      const copilotStart = await readFile(join(root, ".github", "prompts", "slx-start.prompt.md"), "utf8");
+      const geminiExplain = await readFile(join(root, ".gemini", "commands", "slx-explain.md"), "utf8");
+      const cursorRules = await readFile(join(root, ".cursor", "rules", "speclearn.mdc"), "utf8");
+
+      expect(claudePropose).toContain("Universal Language Mirroring");
+      expect(copilotStart).toContain("three-minute diagnostic");
+      expect(geminiExplain).toContain(".speclearn/scratchpad/");
+      expect(cursorRules).toContain("SHA-256");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
 });

@@ -17,26 +17,26 @@ The system SHALL expose a clean `AgentAdapter` interface that contributors can i
 - **THEN** the adapter SHALL be able to declare its identifier and write native command and guardrail outputs without modifying the core parser or state manager
 
 ### Requirement: Core slash commands
-Every built-in adapter SHALL generate `propose`, `start`, `explain`, and `verify` slash-command experiences under the `/slx` namespace.
+Every built-in adapter SHALL generate complete `propose`, `start`, `explain`, and `verify` slash-command experiences under the `/slx` namespace.
 
 #### Scenario: Claude Code commands are generated
 - **WHEN** Claude Code is selected
 - **THEN** the adapter SHALL write `.claude/commands/slx/propose.md`, `start.md`, `explain.md`, and `verify.md`
-- **AND** SHALL manage a bounded section in `CLAUDE.md`
+- **AND** SHALL include language mirroring, sandbox, Socratic, scratchpad, and deterministic verification instructions
 
 #### Scenario: GitHub Copilot commands are generated
 - **WHEN** GitHub Copilot is selected
 - **THEN** the adapter SHALL write `.github/prompts/slx-propose.prompt.md`, `slx-start.prompt.md`, `slx-explain.prompt.md`, and `slx-verify.prompt.md`
-- **AND** SHALL manage a bounded section in `.github/copilot-instructions.md`
+- **AND** SHALL include the same complete SDL behavior and managed guardrails
 
 #### Scenario: Gemini CLI commands are generated
 - **WHEN** Gemini CLI is selected
-- **THEN** the adapter SHALL write its native `/slx:*` command representation under `.gemini/commands/`
-- **AND** SHALL manage a bounded section in `GEMINI.md`
+- **THEN** the adapter SHALL write native `/slx:*` command representations under `.gemini/commands/`
+- **AND** SHALL include the complete SDL workflow and language mirroring rules
 
 #### Scenario: Cursor rules are generated
 - **WHEN** Cursor is selected
-- **THEN** the adapter SHALL write `.cursor/rules/speclearn.mdc` containing SpecLearn slash-command behavior and system guardrails
+- **THEN** the adapter SHALL write `.cursor/rules/speclearn.mdc` containing the complete `/slx` command behavior and system guardrails
 
 ### Requirement: Managed guardrails
 Adapter output SHALL include system guardrails that prohibit LLM API calls inside the CLI binary and require deterministic verification behavior.
