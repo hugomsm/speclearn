@@ -5,7 +5,7 @@ githubCopilot:
 context: |
   Project: SpecLearn — The Spec-Driven Learning (SDL) Framework for Coding Agents.
   Language Policy: All source code, comments, CLI outputs, OpenSpec artifacts, and documentation MUST be written in clear, idiomatic English.
-  
+
   Tech Stack (Strict):
   - Runtime & Language: Node.js (>= 20 LTS) + TypeScript 5.x (Strict mode, ESM modules).
   - Package Manager: pnpm.
@@ -14,10 +14,9 @@ context: |
   - Schema Validation & Dual Parser: `zod` + `zod-to-json-schema` + `gray-matter` (parses both `.course.md` with YAML frontmatter and pure `.course.yaml` files).
   - Process Execution: `execa` or Node native `child_process` for running deterministic verification test commands.
   - Testing & Quality: `vitest`, `biome` (or `eslint` + `prettier`), `@changesets/cli`.
-  
+
   Core Architectural Rules:
   1. Zero LLM API calls inside the CLI binary: The CLI is a deterministic compiler, validator, state manager, and test runner.
   2. Multi-Agent Agnostic: Compiles `/slx:*` (SpecLearn eXperience) slash commands/skills natively for Claude Code (`.claude/commands/`), GitHub Copilot (`.github/prompts/`), Cursor (`.cursor/rules/`) and other code harnesses.
   3. Anti-Cheat Verification: Only `speclearn verify` can mark a module as completed in `.speclearn/state/progress.json` after executing the module's `test_command` with exit code 0 and verifying SHA-256 test file integrity.
   4. Brand & Company Neutral: Zero proprietary or company-specific references in the core repository.
-

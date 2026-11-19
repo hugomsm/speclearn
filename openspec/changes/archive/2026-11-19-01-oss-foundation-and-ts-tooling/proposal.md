@@ -15,11 +15,13 @@ SpecLearn needs a minimal, production-ready Node.js and TypeScript repository fo
 ## Capabilities
 
 ### New Capabilities
+
 - `cli-entrypoint`: Defines the initial executable behavior, including ESM package exposure, version metadata, banner presentation, and help output.
 - `repository-governance`: Defines the repository-level contributor, conduct, security, issue, and pull request expectations published for maintainers and contributors.
 - `automated-quality-releases`: Defines CI validation across supported Node.js versions and Changesets-managed semantic versioning and publishing.
 
 ### Modified Capabilities
+
 - None.
 
 ## Impact

@@ -7,12 +7,14 @@ The repository currently contains documentation and OpenSpec configuration but n
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Establish a reproducible pnpm-based Node.js 20+ package foundation.
 - Build one deterministic ESM CLI executable with a stable basic interface.
 - Add automated quality, governance, and semantic release conventions.
 - Keep the initial implementation small enough to validate before feature work.
 
 **Non-Goals:**
+
 - Implement course parsing, agent compilation, verification, or progress persistence.
 - Make any LLM API calls or introduce framework-specific runtime integrations beyond project dependencies.
 - Add a persistent configuration system or subcommand functionality beyond the initial help experience.
