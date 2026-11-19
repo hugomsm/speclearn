@@ -1,6 +1,6 @@
 {
   "name": "speclearn",
-  "version": "0.3.0",
+  "version": "0.2.0",
   "description": "Spec-Driven Learning (SDL) for Coding Agents",
   "type": "module",
   "bin": {
@@ -46,5 +46,13 @@
     "vitest": "^4.0.14"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugomsm/speclearn.git"
+  },
+  "homepage": "https://github.com/hugomsm/speclearn#readme",
+  "bugs": {
+    "url": "https://github.com/hugomsm/speclearn/issues"
+  }
 }
