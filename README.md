@@ -14,7 +14,7 @@ Course parsing, agent adapters, verification, and persistent learning progress a
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js 24 or newer
 - pnpm 10 or newer
 
 ## Installation
@@ -62,6 +62,28 @@ Markdown courses use YAML frontmatter and the Markdown body as the pedagogical g
 
 The IDE-compatible JSON Schema is published at `schemas/course-spec.v1.schema.json`.
 
+Initialize SpecLearn in the current repository:
+
+```sh
+speclearn init
+```
+
+For unattended setup, select supported agents explicitly:
+
+```sh
+speclearn init --agents claude,copilot,gemini,cursor --yes
+```
+
+Initialization creates `.speclearn/specs/`, `.speclearn/state/`, `.speclearn/scratchpad/`, and `.speclearn/config.yaml`. It also updates `.gitignore` so state and scratchpad files remain local while specifications stay trackable.
+
+Show local learning progress:
+
+```sh
+speclearn status
+```
+
+Supported adapters are Claude Code, GitHub Copilot, Gemini CLI, and Cursor. Community adapters can implement the `AgentAdapter` interface in `src/adapters/` and register through the adapter registry.
+
 ## Local Development
 
 Clone the repository and install dependencies:
@@ -102,7 +124,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the proposal, validation, implementat
 ## Project Principles
 
 - **Deterministic:** The CLI does not make LLM API calls.
-- **Strict TypeScript:** The package uses Node.js 20+, strict ESM TypeScript, tsup, and Vitest.
+- **Strict TypeScript:** The package uses Node.js 24+, strict ESM TypeScript, tsup, and Vitest.
 - **Multi-agent:** The project is designed to generate native workflows for multiple coding-agent harnesses.
 - **Verifiable:** Verification behavior is intended to run deterministic commands and validate test integrity.
 - **Brand neutral:** Core concepts and core repositories avoid proprietary or company-specific dependencies.

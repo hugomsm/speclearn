@@ -19,10 +19,13 @@ describe("speclearn CLI", () => {
     expect(help).toContain("--help");
   });
 
-  it("registers the COURSE-SPEC validate command", () => {
+  it("registers init, status, and validate commands", () => {
     const program = createCli();
+    const commandNames = program.commands.map((command) => command.name());
 
-    expect(program.commands.map((command) => command.name())).toContain("validate");
+    expect(commandNames).toContain("init");
+    expect(commandNames).toContain("status");
+    expect(commandNames).toContain("validate");
     expect(program.commands.find((command) => command.name() === "validate")?.helpInformation()).toContain("<path>");
   });
 });

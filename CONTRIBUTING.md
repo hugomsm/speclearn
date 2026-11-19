@@ -2,7 +2,7 @@
 
 ## Local setup
 
-SpecLearn requires Node.js 20 or newer and pnpm.
+SpecLearn requires Node.js 24 or newer and pnpm.
 
 ```sh
 pnpm install
