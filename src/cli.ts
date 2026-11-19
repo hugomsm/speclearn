@@ -14,6 +14,8 @@ import {
   renderDagStatus,
   renderProgressBar,
 } from "./state/progress.js";
+import { startCourse } from "./sandbox/start.js";
+import { skipModule } from "./sandbox/skip.js";
 
 export const VERSION = "0.1.0";
 
@@ -100,6 +102,37 @@ export function createCli(): Command {
         await initializeWorkspace({ projectRoot: process.cwd(), agents: agentIds });
         await createEmptyProgress(process.cwd());
         clack.outro(pc.green("SpecLearn workspace initialized"));
+      } catch (error) {
+        clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("start")
+    .description("Start a COURSE-SPEC in an isolated sandbox")
+    .argument("<course>", "path to a COURSE-SPEC Markdown or YAML file")
+    .action(async (coursePath: string) => {
+      try {
+        const result = await startCourse(process.cwd(), coursePath);
+        const location = result.sandbox.branch
+          ? `branch ${result.sandbox.branch}`
+          : `directory ${result.sandbox.path ?? ".speclearn/sandbox/"}`;
+        clack.outro(pc.green(`Started ${result.courseId} in ${location}`));
+      } catch (error) {
+        clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
+        process.exitCode = 1;
+      }
+    });
+
+  program
+    .command("skip")
+    .description("Mark demonstrated mastery for a module")
+    .argument("<module>", "module ID to mark as skipped_mastered")
+    .action(async (moduleId: string) => {
+      try {
+        await skipModule(process.cwd(), moduleId);
+        clack.outro(pc.green(`Marked ${moduleId} as skipped_mastered`));
       } catch (error) {
         clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
         process.exitCode = 1;
