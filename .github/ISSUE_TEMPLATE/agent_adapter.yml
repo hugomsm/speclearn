@@ -1,0 +1,26 @@
+name: Agent adapter proposal
+description: Propose support for a coding agent or harness
+labels:
+  - agent-adapter
+body:
+  - type: markdown
+    attributes:
+      value: "Describe the target harness and the generated slash commands or instruction files."
+  - type: textarea
+    id: harness
+    attributes:
+      label: Target agent or harness
+    validations:
+      required: true
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Generated output layout
+      description: Specify the files and directories the adapter should generate.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility constraints
+      description: Include version ranges, conventions, or limitations.

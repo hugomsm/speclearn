@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a new SpecLearn capability
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: "Describe the externally observable behavior you want and why it is needed."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Include observable scenarios or commands when possible.
