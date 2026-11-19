@@ -32,6 +32,7 @@ describe("SpecLearn progress state", () => {
         id: "types-and-values",
         status: "completed",
         test_file_sha256: { "tests/types.test.ts": "abc123" },
+        verification_signature: "verified-signature",
         completed_at: "2026-11-19T12:00:00.000Z",
       }],
     }).success).toBe(true);

@@ -42,12 +42,13 @@ Do not copy production business logic into the scratchpad and do not mark the ma
 
 You are at the deterministic verification boundary.
 
-1. Read the active module's \`test_command\` and \`test_files\` from its COURSE-SPEC.
-2. Run only that declared test command. Never invent a replacement success result.
-3. Verify the SHA-256 hashes of declared test files against their recorded integrity values.
-4. Mark a module completed only when the test command exits successfully and test-file integrity also passes.
+1. Run \`npx speclearn verify [module-id]\` for the active or selected module. Use \`npx speclearn lock-tests [module-id]\` when test files are intentionally locked before work begins.
+2. Read the declared \`test_command\`, \`test_files\`, and \`rubric_checks\` from the active COURSE-SPEC.
+3. If verification fails with a non-zero exit code, analyze \`stdout\` and \`stderr\`, ask one guiding Socratic question, and do not fix the student's code or mark the module completed.
+4. If verification passes, review \`git diff\` against every \`rubric_check\` and ask exactly one final conceptual consolidation question.
+5. Display the updated progress graph. Completion is valid only when test execution exits 0 and all test-file SHA-256 hashes match before the CLI generates the verification signature.
 
-If tests fail or hashes differ, preserve the module state, explain the exact failure, and provide guidance. Do not mark completion on test success alone or when integrity cannot be checked.${LANGUAGE_MIRRORING}`,
+Never edit \`.speclearn/state/progress.json\` to claim completion. Never mark completion if tests fail, files are missing or empty, or integrity cannot be proven.${LANGUAGE_MIRRORING}`,
 } as const;
 
 export function guardedContent(extraLines: string[] = []): string {
