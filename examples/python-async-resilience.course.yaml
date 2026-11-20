@@ -1,0 +1,78 @@
+schema_version: "1.0"
+id: python-async-resilience
+title: Resilient Asynchronous Systems in Python
+author: SpecLearn Core Authors
+tier: official
+level: advanced
+estimated_hours: 8
+locale: en
+context_sources:
+  mcp_resources:
+    - mcp://python-concurrency-guidelines
+    - mcp://distributed-systems-resilience
+  mandatory_adrs:
+    - docs/adr/003-asyncio-fault-tolerance.md
+  reference_repo: https://github.com/speclearn/python-async-resilience-starter
+harness_rules:
+  socratic_mode: true
+  allow_full_code_spoiler: false
+  scratchpad_enabled: true
+modules:
+  - id: async-event-loop-and-taskgroups
+    title: Structured Concurrency with Python 3.11+ TaskGroups
+    prerequisites: []
+    universal_concepts:
+      - Structured Concurrency
+      - asyncio.TaskGroup lifecycle
+      - ExceptionGroup handling
+      - Cooperative Cancellation
+    arch_context:
+      - Non-blocking I/O Architecture
+      - Graceful Shutdown Lifecycle
+    verification:
+      test_command: pytest tests/test_taskgroups.py
+      test_files:
+        - tests/test_taskgroups.py
+      rubric_checks:
+        - Handles partial task failures without leaving orphan background coroutines
+        - Uses asyncio.TaskGroup context manager instead of unmonitored asyncio.create_task
+
+  - id: retry-and-exponential-backoff
+    title: Idempotent Retries with Jittered Exponential Backoff
+    prerequisites:
+      - async-event-loop-and-taskgroups
+    universal_concepts:
+      - Transient Fault Handling
+      - Full Jitter Algorithm
+      - Idempotency Keys
+      - Rate Limiting Mitigation
+    arch_context:
+      - Downstream HTTP Client Integration
+      - Connection Pool Exhaustion Prevention
+    verification:
+      test_command: pytest tests/test_backoff.py
+      test_files:
+        - tests/test_backoff.py
+      rubric_checks:
+        - Retries exclusively on transient network errors and 5xx status codes
+        - Calculates backoff delay with decorrelated full jitter
+
+  - id: circuit-breaker-pattern
+    title: Distributed Circuit Breaker with State Transitions
+    prerequisites:
+      - retry-and-exponential-backoff
+    universal_concepts:
+      - Circuit Breaker Pattern
+      - Three-State FSM (CLOSED, OPEN, HALF-OPEN)
+      - Failure Threshold & Recovery Timers
+      - Fallback Degradation
+    arch_context:
+      - Cascading Failure Prevention
+      - Prometheus Metrics Instrumentation
+    verification:
+      test_command: pytest tests/test_circuit_breaker.py
+      test_files:
+        - tests/test_circuit_breaker.py
+      rubric_checks:
+        - Transitions from CLOSED to OPEN upon reaching sliding window failure rate threshold
+        - Allows probe requests during HALF-OPEN state before resetting or tripping back to OPEN

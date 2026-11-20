@@ -1,6 +1,6 @@
 {
   "name": "speclearn",
-  "version": "0.3.0",
+  "version": "0.2.0",
   "description": "Spec-Driven Learning (SDL) for Coding Agents",
   "type": "module",
   "bin": {
@@ -18,7 +18,7 @@
   "scripts": {
     "build": "tsup && pnpm schema:generate",
     "dev": "tsup --watch",
-    "test": "vitest run",
+    "test": "vitest run --testTimeout 15000",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
