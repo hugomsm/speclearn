@@ -1,6 +1,6 @@
 {
   "name": "speclearn",
-  "version": "0.3.0",
+  "version": "0.2.0",
   "description": "Spec-Driven Learning (SDL) for Coding Agents",
   "type": "module",
   "bin": {
@@ -22,7 +22,8 @@
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "schema:generate": "tsx scripts/generate-course-schema.ts"
+    "schema:generate": "tsx scripts/generate-course-schema.ts",
+    "ci:publish": "pnpm publish -r --access public --no-git-checks"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
