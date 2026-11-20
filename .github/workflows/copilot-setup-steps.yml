@@ -12,6 +12,10 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # The job MUST be called `copilot-setup-steps` for Copilot coding agent to pick it up.
   copilot-setup-steps:
@@ -23,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Install OpenSpec CLI
         run: npm install -g @fission-ai/openspec
