@@ -4,6 +4,12 @@
 
 ### Minor Changes
 
+- f41ae11: Add deterministic verification, anti-tampering signatures, and Socratic verification workflows.
+
+## 0.3.0
+
+### Minor Changes
+
 - defd459: Add deterministic verification, anti-tampering signatures, and Socratic verification workflows.
 
 ## 0.3.0
