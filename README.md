@@ -1,191 +1,257 @@
+<div align="center">
+
 # SpecLearn
 
-**Spec-Driven Learning (SDL) for Coding Agents**
+**Spec-Driven Learning (SDL) for Coding Agents**  
+*Turn Claude Code, GitHub Copilot, Gemini, and Cursor into Socratic mentors inside your IDE.*
 
-SpecLearn turns coding agents into structured learning mentors inside an IDE. It provides a deterministic TypeScript CLI foundation for authoring, compiling, validating, and verifying spec-driven learning experiences across agent harnesses.
+[![NPM Version](https://img.shields.io/npm/v/speclearn?color=blue&style=flat-square)](https://www.npmjs.com/package/speclearn)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/hugomsm/speclearn/ci.yml?branch=main&style=flat-square)](https://github.com/hugomsm/speclearn/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![Node >= 24](https://img.shields.io/badge/Node->=%2024%20LTS-brightgreen.svg?style=flat-square)](https://nodejs.org/)
 
-The CLI is designed to work with tools such as Claude Code, GitHub Copilot, Cursor, and other coding-agent environments without requiring LLM API calls from the SpecLearn binary itself.
+</div>
 
-## Status
+---
 
-This repository is in active foundation development. The current package provides the initial `speclearn` executable, banner and help output, TypeScript build tooling, smoke tests, repository governance, and release automation.
+## The AI Engineering Paradox
 
-Course parsing, agent adapters, verification, and persistent learning progress are planned capabilities and are not yet part of the initial CLI.
+AI coding agents are dramatically accelerating software development. Through **Spec-Driven Development (SDD)**, agents can take a formal specification and scaffold production-ready code in seconds.
 
-## Requirements
+However, this breakthrough has created the **AI Engineering Paradox**:
 
-- Node.js 24 or newer
-- pnpm 10 or newer
+> **As code generation accelerates toward zero marginal cost, human architectural comprehension risks degrading.** When agents write 95% of the code, engineers become passive code reviewers who lose intuition for system invariants, edge-case resilience, and underlying domain models.
 
-## Installation
+### Why Legacy Learning Approaches Fail in the Agent Era
 
-Install the package from npm:
+1. **Traditional Video Courses (LMS)**: Disconnected from your real code. You watch someone else write code in a trivial playground, retaining little and struggling to apply concepts to real-world architectures.
+2. **Spec-Driven Development (SDD)**: Optimizes strictly for execution throughput (*"agent, build this spec"*). It treats the human as an approving rubber stamp rather than an upskilled architect.
+3. **Ad-Hoc Prompting**: Lacks deterministic ground truth. An LLM will enthusiastically praise a flawed implementation that silently breaks under concurrency or invalid state transitions.
 
-```sh
-npm install --global speclearn
+---
+
+## The Spec-Driven Learning (SDL) Manifesto
+
+**Spec-Driven Learning (SDL)** transforms specifications from mere code generation templates into **executable pedagogical curriculums**.
+
+Under SDL:
+- **Specifications Drive Mastery**: Specifications define learning outcomes, universal tech concepts, and architectural constraints.
+- **Agents Act as Socratic Mentors**: Guided by harness rules, agents challenge you with probing questions, provide conceptual hints, and refuse full-code spoilers.
+- **Verification is Deterministic**: Learning progression is unlocked only when local unit, integration, and architecture tests pass exit code `0` with cryptographic SHA-256 test integrity.
+- **Dual-Layer Context**: Learning blends universal software engineering concepts (DDD, Circuit Breakers, Monads) with your team's live architectural context (ADRs, MCP resources, and real codebases).
+
+---
+
+## Comparison Matrix
+
+| Dimension | Traditional Video LMS (Coursera, Udemy) | SDD Harnesses (OpenSpec, Spec-Kit) | Spec-Driven Learning (SpecLearn) |
+| :--- | :--- | :--- | :--- |
+| **Primary Goal** | Passive knowledge consumption | Rapid automated code generation | Active developer mastery & mental models |
+| **Human Role** | Passive spectator | Spec writer & PR reviewer | Hands-on engineer & active learner |
+| **Agent Role** | None (Static pre-recorded videos) | Autonomous code generator | Socratic mentor & real-time architecture coach |
+| **Feedback Loop** | Multiple-choice quizzes / None | Git diff inspection | Socratic dialogue + instant test execution |
+| **Context Integration** | Isolated toy browser playground | Target codebase | **Dual-Layer**: Tech concepts + Real repo MCP/ADRs |
+| **Anti-Cheat Verification** | Honor system | CI unit tests on agent output | Deterministic test runner + SHA-256 test integrity |
+| **Harness Compatibility** | Web browser only | Terminal / agent-specific | Claude Code, GitHub Copilot, Gemini CLI, Cursor |
+
+---
+
+## Visual Architecture
+
+### 1. The 4-Stage Pedagogical Loop
+
+SpecLearn guides the developer through a structured cycle designed to build durable mental models:
+
+```mermaid
+flowchart TD
+    A["1. MEASURE\n(Baseline & Prior Knowledge)"] --> B["2. PLAN\n(Personalized DAG Curriculum)"]
+    B --> C["3. TEACH & SCAFFOLD\n(Socratic Prompts & Guardrails)"]
+    C --> D["4. VERIFY\n(Deterministic Test Execution)"]
+    D -- "Test Fails" --> C
+    D -- "Passes (Exit Code 0 + SHA-256 Valid)" --> E["Advance Progress State\n(.speclearn/state/progress.json)"]
+    E --> B
 ```
 
-Or run it with pnpm:
-
-```sh
-pnpm dlx speclearn
+```text
+  +-----------------------------------------------------------------+
+  |                  THE 4-STAGE PEDAGOGICAL LOOP                   |
+  +-----------------------------------------------------------------+
+         |
+         v
+  [ 1. MEASURE ] ----------> Assess current understanding & prerequisites
+         |
+         v
+  [ 2. PLAN ] -------------> Assemble module Directed Acyclic Graph (DAG)
+         |
+         v
+  [ 3. TEACH & SCAFFOLD ] -> Socratic questioning, concepts scratchpad,
+         |                   no full-code spoilers allowed
+         v
+  [ 4. VERIFY ] -----------> Deterministic test runner (`speclearn verify`)
+         |
+         +--- [FAIL] ------> Inspect failure traces, receive Socratic hints
+         |
+         +--- [PASS] ------> SHA-256 test hash verified -> Unlock next module
 ```
 
-## Usage
+### 2. Dual-Layer Knowledge Architecture
 
-Display help:
+Courses bind high-level computer science principles with your real repository context:
 
-```sh
-speclearn --help
+```mermaid
+graph LR
+    subgraph DLK["Dual-Layer Knowledge"]
+        subgraph L1["Layer 1: Universal Concepts"]
+            C1["Domain-Driven Design"]
+            C2["Structured Concurrency"]
+            C3["Circuit Breaker Pattern"]
+        end
+        subgraph L2["Layer 2: Architecture Context"]
+            A1["MCP Context Servers"]
+            A2["Mandatory ADRs"]
+            A3["Production Codebase"]
+        end
+    end
+    L1 --> AGENT["Socratic Agent Harness\n(Claude / Copilot / Gemini / Cursor)"]
+    L2 --> AGENT
+    AGENT --> LEARNER["Developer / Learner in IDE"]
 ```
 
-Display the installed CLI version:
+---
 
-```sh
-speclearn --version
+## 30-Second Quickstart
+
+### Step 1: Initialize SpecLearn
+
+Run the interactive initializer in your repository:
+
+```bash
+npx speclearn init
 ```
 
-Run the CLI without arguments to display the SpecLearn banner and help:
+Or initialize specific agent adapters non-interactively:
 
-```sh
-speclearn
+```bash
+npx speclearn init --agents claude,copilot,gemini,cursor --yes
 ```
 
-Validate a course document in Markdown or YAML format:
+This compiles native skills and slash commands directly into your coding agent's configuration directories:
+- **Claude Code**: `.claude/commands/`
+- **GitHub Copilot**: `.github/prompts/`
+- **Cursor**: `.cursor/rules/`
+- **Gemini CLI**: `.gemini/`
 
-```sh
-speclearn validate ./courses/typescript.course.md
-speclearn validate ./courses/typescript.course.yaml
+### Step 2: Learn with Slash Commands
+
+Open your agent terminal or chat in your IDE and interact using the `/slx:*` (SpecLearn eXperience) commands:
+
+```text
+/slx:propose "Design an event-driven Kafka course based on our ADRs"
+/slx:start domain-entities-and-aggregates
+/slx:explain "Why should domain entities not reference ORM annotations?"
+/slx:verify
 ```
 
-Markdown courses use YAML frontmatter and the Markdown body as the pedagogical guide. Pure `.course.yaml` and `.yml` files use the same COURSE-SPEC model.
+---
 
-The IDE-compatible JSON Schema is published at `schemas/course-spec.v1.schema.json`.
+## The `COURSE-SPEC` Open Standard
 
-Initialize SpecLearn in the current repository:
+Courses are declared as either hybrid Markdown documents (`.course.md`) with YAML frontmatter or pure YAML files (`.course.yaml`).
 
-```sh
-speclearn init
+The JSON Schema is published at `schemas/course-spec.v1.schema.json` for IDE autocomplete and schema validation.
+
+Here is a concise example of a `.course.md` specification:
+
+```markdown
+---
+schema_version: "1.0"
+id: typescript-clean-architecture
+title: TypeScript Clean Architecture & Hexagonal Ports
+author: SpecLearn Core Authors
+tier: official
+level: intermediate
+estimated_hours: 6
+locale: en
+context_sources:
+  mcp_resources:
+    - mcp://codebase-architecture
+  mandatory_adrs:
+    - docs/adr/001-hexagonal-architecture.md
+harness_rules:
+  socratic_mode: true
+  allow_full_code_spoiler: false
+  scratchpad_enabled: true
+modules:
+  - id: domain-entities-and-aggregates
+    title: Domain Entities and Core Business Aggregates
+    prerequisites: []
+    universal_concepts:
+      - Domain-Driven Design (DDD)
+      - Aggregate Roots
+      - Immutability
+    arch_context:
+      - Core Domain Layer Isolation
+    verification:
+      test_command: pnpm test tests/unit/domain
+      test_files:
+        - tests/unit/domain/order-aggregate.test.ts
+      rubric_checks:
+        - Entity maintains internal consistency invariants
+        - Business rules throw domain exceptions without framework imports
+---
+
+# Pedagogical Guide: TypeScript Clean Architecture
+
+Welcome! When teaching this course, the agent MUST:
+1. Challenge the learner to identify invariants before writing constructors.
+2. Refuse to write complete implementation files into the workspace.
+3. Prompt the user to run `/slx:verify` when unit tests are implemented.
 ```
 
-For unattended setup, select supported agents explicitly:
+Explore our canonical examples in [`examples/`](examples/):
+- [`examples/typescript-clean-architecture.course.md`](examples/typescript-clean-architecture.course.md): Hybrid Markdown course with embedded pedagogical guide.
+- [`examples/python-async-resilience.course.yaml`](examples/python-async-resilience.course.yaml): Pure YAML course spec modeling Python 3.11+ async resilience.
 
-```sh
-speclearn init --agents claude,copilot,gemini,cursor --yes
-```
+---
 
-Initialization creates `.speclearn/specs/`, `.speclearn/state/`, `.speclearn/scratchpad/`, and `.speclearn/config.yaml`. It also updates `.gitignore` so state and scratchpad files remain local while specifications stay trackable.
+## CLI Command Reference
 
-Show local learning progress:
+SpecLearn is a deterministic, zero-LLM CLI compiler and test runner.
 
-```sh
-speclearn status
-```
+| Command | Description |
+| :--- | :--- |
+| `speclearn init` | Initialize SpecLearn configuration and agent adapters in current repo |
+| `speclearn validate <path>` | Validate a `.course.md` or `.course.yaml` against COURSE-SPEC standard |
+| `speclearn status` | Display current course progress bar, DAG module statuses, and scores |
+| `speclearn start <module-id>` | Activate a course module and initialize concept scratchpads |
+| `speclearn verify [module-id]` | Execute deterministic tests and record completion with SHA-256 integrity |
+| `speclearn skip <module-id>` | Skip a module and record reason in progress state |
 
-Supported adapters are Claude Code, GitHub Copilot, Gemini CLI, and Cursor. Community adapters can implement the `AgentAdapter` interface in `src/adapters/` and register through the adapter registry.
+---
 
 ## Local Development
 
-Clone the repository and install dependencies:
+```bash
+# Clone the repository
+git clone https://github.com/hugomsm/speclearn.git
+cd speclearn
 
-```sh
+# Install dependencies (Node >= 24 LTS, pnpm >= 10)
 pnpm install
+
+# Run build and development watchers
+pnpm dev
+
+# Execute unit and validation tests
+pnpm test
+
+# Typecheck and lint
+pnpm typecheck
+pnpm lint
 ```
 
-Available commands:
-
-```sh
-pnpm dev        # Watch and rebuild the CLI
-pnpm build      # Build dist/cli.js
-pnpm test       # Run Vitest
-pnpm lint       # Run ESLint
-pnpm typecheck  # Run strict TypeScript checks
-pnpm format     # Format the repository with Prettier
-```
-
-After building, exercise the generated executable:
-
-```sh
-node dist/cli.js --help
-node dist/cli.js --version
-node dist/cli.js
-```
-
-## Spec-Driven Development
-
-SpecLearn uses OpenSpec to plan and document behavior changes.
-
-- Existing specifications live under `openspec/specs/`.
-- Active and archived changes live under `openspec/changes/`.
-- Use a single active change for each cohesive implementation scope.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the proposal, validation, implementation, and archive workflow.
-
-## Project Principles
-
-- **Deterministic:** The CLI does not make LLM API calls.
-- **Strict TypeScript:** The package uses Node.js 24+, strict ESM TypeScript, tsup, and Vitest.
-- **Multi-agent:** The project is designed to generate native workflows for multiple coding-agent harnesses.
-- **Verifiable:** Verification behavior is intended to run deterministic commands and validate test integrity.
-- **Brand neutral:** Core concepts and core repositories avoid proprietary or company-specific dependencies.
-
-## Repository Structure
-
-```text
-src/                   CLI source code
-tests/                 Automated tests
-schemas/               Distributed SpecLearn schema resources
-openspec/specs/        Current specifications
-openspec/changes/      Active and archived change plans
-.github/               CI, issue templates, and pull request templates
-.changeset/            Semantic release metadata
-```
-
-## Spec-Driven Learning skills
-
-The initialized agent adapters expose the `/slx:*` workflows:
-
-- `/slx:propose` — inspect the repository and create a valid course specification
-- `/slx:start` — measure, plan, and scaffold the active learning module
-- `/slx:explain [concept]` — use an isolated example in `.speclearn/scratchpad/`
-- `/slx:verify` — validate tests and test-file integrity before completion
-
-All mentoring is mirrored to the student's or active course's language while framework identifiers remain English.
-
-Start a course with safe sandbox isolation:
-
-```sh
-speclearn start ./courses/typescript.course.yaml
-```
-
-Record demonstrated mastery without marking the module as deterministically completed:
-
-```sh
-speclearn skip types-and-values
-```
-
-Lock a module's test files before starting work:
-
-```sh
-speclearn lock-tests types-and-values
-```
-
-Run deterministic verification:
-
-```sh
-speclearn verify types-and-values
-```
-
-Verification only completes a module when the test command exits with code 0 and every locked test file still matches its SHA-256 hash. Direct edits to `progress.json` cannot mark a module completed.
-
-## Contributing
-
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md), follow the Code of Conduct, and use the issue and pull request templates.
-
-- [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Security Policy](SECURITY.md)
-- [Contributor Guide](CONTRIBUTING.md)
+---
 
 ## License
 
-SpecLearn is released under the [MIT License](LICENSE).
+SpecLearn is licensed under the [MIT License](LICENSE).
