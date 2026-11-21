@@ -18,22 +18,29 @@ Every core skill template SHALL instruct the agent to conduct mentoring in the l
 - **THEN** the agent SHALL mirror that active course language unless the student explicitly selects another language
 
 ### Requirement: Propose skill workflow
-The `/slx:propose` skill SHALL inspect the repository, ask no more than three calibration questions, generate a valid course spec, and validate it.
+The `/slx:propose` skill SHALL inspect the repository, ask no more than three calibration questions, generate a COURSE-SPEC in the selected format, and validate the exact output file.
 
 #### Scenario: Repository author proposes a course
 - **WHEN** the agent receives `/slx:propose`
 - **THEN** it SHALL inspect the repository stack, structure, and configured MCP resources
-- **AND** SHALL ask at most one short question for target seniority, learning goal, and Markdown versus YAML preference
+- **AND** SHALL ask no more than three concise questions for missing target level, learning outcome, or Markdown versus YAML preference
+- **AND** SHALL not invent repository resources, test files, or verification commands
 
 #### Scenario: Course spec is generated
 - **WHEN** repository context and calibration answers are available
-- **THEN** the agent SHALL generate `.speclearn/specs/.course.md` or the selected YAML equivalent
+- **THEN** the agent SHALL generate `.speclearn/specs/<id>.course.md` or `.speclearn/specs/<id>.course.yaml`, using a kebab-case course ID as the filename
 - **AND** SHALL separate universal concepts from architecture-specific context
+- **AND** SHALL include all required COURSE-SPEC metadata, at least one valid module, and a non-empty pedagogical guide for Markdown courses
 
 #### Scenario: Generated spec is validated
 - **WHEN** the course file has been generated
 - **THEN** the skill SHALL run `npx speclearn validate <path>` or its equivalent package invocation
-- **AND** SHALL report validation failures before declaring the proposal ready
+- **AND** SHALL fix reported issues and rerun validation before declaring the proposal ready
+- **AND** SHALL report validation failures or an unavailable validator instead of claiming success
+
+#### Scenario: Existing course path is selected
+- **WHEN** the generated course ID maps to an existing output file
+- **THEN** the skill SHALL ask whether to update that course or choose another ID before writing
 
 ### Requirement: Start skill Socratic loop
 The `/slx:start` skill SHALL guide learning through measurement, planning, and scaffolded teaching stages.

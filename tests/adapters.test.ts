@@ -69,6 +69,10 @@ describe("SpecLearn agent adapters", () => {
         expect(skillContent).toContain("---");
         expect(skillContent).toContain("SpecLearn");
       }
+      const proposeSkill = await readFile(join(root, ".agents", "skills", "slx-propose", "SKILL.md"), "utf8");
+      expect(proposeSkill).toContain(".speclearn/specs/<id>.course.md");
+      expect(proposeSkill).toContain("YAML frontmatter");
+      expect(proposeSkill).toContain("npx speclearn validate");
       await expect(readFile(join(root, "AGENTS.md"), "utf8")).resolves.toContain("SpecLearn Guardrails");
     } finally {
       await rm(root, { recursive: true, force: true });

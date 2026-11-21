@@ -33,15 +33,17 @@ The CLI SHALL support `--agents` with a comma-separated agent list and `--yes` f
 - **THEN** the CLI SHALL reject the initialization with a clear list of supported identifiers
 
 ### Requirement: Local workspace layout
-Initialization SHALL create `.speclearn/specs/`, `.speclearn/state/`, `.speclearn/scratchpad/`, and `.speclearn/config.yaml`.
+Initialization SHALL create `.speclearn/specs/`, `.speclearn/state/`, `.speclearn/scratchpad/`, `.speclearn/config.yaml`, and the packaged `.speclearn/course-spec.v1.schema.json`.
 
 #### Scenario: Workspace does not exist
 - **WHEN** initialization creates a workspace for the first time
 - **THEN** every required directory and configuration file SHALL exist after the command completes
+- **AND** the COURSE-SPEC JSON Schema SHALL be copied from the installed SpecLearn package
 
 #### Scenario: Workspace already exists
 - **WHEN** initialization runs again in an initialized workspace
 - **THEN** existing user files SHALL be preserved and missing SpecLearn structure SHALL be restored without duplicate managed content
+- **AND** the managed COURSE-SPEC JSON Schema SHALL be refreshed from the installed package version
 
 ### Requirement: Git ignore management
 Initialization SHALL ignore transient state and scratchpad data while keeping course specifications trackable.
