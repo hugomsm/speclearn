@@ -1,19 +1,45 @@
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createBuiltInAdapterRegistry } from "../adapters/index.js";
+
+const COURSE_SCHEMA_FILE = "course-spec.v1.schema.json";
 
 export interface InitOptions {
   projectRoot: string;
   agents: string[];
 }
 
+async function readCourseSchema(): Promise<string> {
+  const moduleDirectory = dirname(fileURLToPath(import.meta.url));
+  // Source tests and the bundled package place this module at different depths.
+  const schemaPaths = [
+    resolve(moduleDirectory, "../../schemas", COURSE_SCHEMA_FILE),
+    resolve(moduleDirectory, "../schemas", COURSE_SCHEMA_FILE),
+  ];
+
+  for (const schemaPath of schemaPaths) {
+    try {
+      return await readFile(schemaPath, "utf8");
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error(`Unable to locate the packaged COURSE-SPEC schema: ${COURSE_SCHEMA_FILE}`);
+}
+
 export async function initializeWorkspace(options: InitOptions): Promise<void> {
   const root = options.projectRoot;
+  const courseSchema = await readCourseSchema();
   await Promise.all([
     mkdir(join(root, ".speclearn", "specs"), { recursive: true }),
     mkdir(join(root, ".speclearn", "state"), { recursive: true }),
     mkdir(join(root, ".speclearn", "scratchpad"), { recursive: true }),
   ]);
+  await writeFile(join(root, ".speclearn", COURSE_SCHEMA_FILE), courseSchema, "utf8");
 
   const configPath = join(root, ".speclearn", "config.yaml");
   try {

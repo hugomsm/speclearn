@@ -8,10 +8,12 @@ describe("SpecLearn workspace initialization", () => {
   it("creates required directories and config without losing existing content", async () => {
     const root = await mkdtemp(join(tmpdir(), "speclearn-init-"));
     const keepFile = join(root, ".speclearn", "specs", "keep.md");
+    const schemaFile = join(root, ".speclearn", "course-spec.v1.schema.json");
 
     try {
       await initializeWorkspace({ projectRoot: root, agents: ["claude"] });
       await writeFile(keepFile, "keep me", "utf8");
+      await writeFile(schemaFile, "{}\n", "utf8");
       await initializeWorkspace({ projectRoot: root, agents: ["claude"] });
 
       await expect(stat(join(root, ".speclearn", "specs"))).resolves.toBeDefined();
@@ -19,6 +21,9 @@ describe("SpecLearn workspace initialization", () => {
       await expect(stat(join(root, ".speclearn", "scratchpad"))).resolves.toBeDefined();
       await expect(readFile(keepFile, "utf8")).resolves.toBe("keep me");
       await expect(readFile(join(root, ".speclearn", "config.yaml"), "utf8")).resolves.toContain("schema_version");
+      await expect(
+        readFile(schemaFile, "utf8"),
+      ).resolves.toBe(await readFile(join(process.cwd(), "schemas", "course-spec.v1.schema.json"), "utf8"));
     } finally {
       await rm(root, { recursive: true, force: true });
     }

@@ -160,6 +160,8 @@ This compiles native skills and slash commands directly into your coding agent's
 - **Antigravity**: `.gemini/commands/` & `ANTIGRAVITY.md`
 - **Generic / Any Coding Agent**: `.agents/skills/slx-*/` & `AGENTS.md`
 
+The initializer also installs the versioned COURSE-SPEC JSON Schema at `.speclearn/course-spec.v1.schema.json`. The `/slx:propose` skill reads it when authoring course metadata and modules.
+
 ### Step 2: Learn with Slash Commands
 
 Open your agent terminal or chat in your IDE and interact using the `/slx:*` (SpecLearn eXperience) commands:
