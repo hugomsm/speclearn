@@ -1,6 +1,6 @@
 {
   "name": "speclearn",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Spec-Driven Learning (SDL) for Coding Agents",
   "type": "module",
   "bin": {
