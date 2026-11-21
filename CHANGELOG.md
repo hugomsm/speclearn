@@ -1,5 +1,11 @@
 # speclearn
 
+## 0.3.1
+
+### Patch Changes
+
+- 5c0fc66: Fixes course generation and installs the COURSE-SPEC schema during bootstrap.
+
 ## 0.3.0
 
 ### Minor Changes
