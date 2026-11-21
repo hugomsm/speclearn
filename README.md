@@ -3,7 +3,7 @@
 # SpecLearn
 
 **Spec-Driven Learning (SDL) for Coding Agents**  
-*Turn Claude Code, GitHub Copilot, Gemini, and Cursor into Socratic mentors inside your IDE.*
+*Turn Claude Code, GitHub Copilot, Antigravity, Cursor, and any coding agent into Socratic mentors inside your IDE.*
 
 [![NPM Version](https://img.shields.io/npm/v/speclearn?color=blue&style=flat-square)](https://www.npmjs.com/package/speclearn)
 [![CI Status](https://img.shields.io/github/actions/workflow/status/hugomsm/speclearn/ci.yml?branch=main&style=flat-square)](https://github.com/hugomsm/speclearn/actions)
@@ -42,6 +42,46 @@ Under SDL:
 
 ---
 
+## What is a Socratic Agent?
+
+A **Socratic Agent** is a coding agent (Claude Code, GitHub Copilot, Antigravity, Cursor, or any agent supporting the open `.agents/skills/` standard) operating under a strict pedagogical harness defined by a COURSE-SPEC. Instead of acting as an autonomous code generator, it adopts the role of a **Socratic mentor** — following the same method used by Socrates: leading the learner to understanding through targeted questions, structured hints, and guided experimentation, rather than delivering answers directly.
+
+### How it works in practice
+
+When `harness_rules.socratic_mode: true` is set in a course spec, the agent is constrained to:
+
+| Behavior | Standard Agent | Socratic Agent |
+| :--- | :--- | :--- |
+| **Implementation request** | Writes the full solution | Asks what invariants or edge cases the developer has considered |
+| **Wrong approach detected** | Silently fixes it or accepts it | Poses a guiding question that exposes the flaw |
+| **Verification failure** | Diagnoses and patches the code | Analyses `stdout`/`stderr` and asks exactly one diagnostic question |
+| **Concept explanation** | Delivers a full explanation | Opens a minimal scratchpad experiment and walks through it step by step |
+| **Module completion** | At the developer's request | Only after deterministic test execution exits `0` with valid SHA-256 integrity |
+
+### The Socratic loop in `/slx:explain`
+
+The `/slx:explain` command explicitly activates a **Socratic loop**:
+
+1. The agent pauses the active lab and opens an isolated scratchpad under `.speclearn/scratchpad/`.
+2. It prompts the learner first — asking what they already know or expect — before introducing any theory.
+3. It explains in small, testable steps, letting the student run each experiment before proceeding.
+4. Once the concept is understood, the agent summarises the insight and returns to the active module.
+
+### Disabling Socratic mode
+
+Socratic mode is **enabled by default** (`socratic_mode: true`) in every course spec. Course authors can disable it for specific courses, though this is discouraged for learning-oriented courses:
+
+```yaml
+harness_rules:
+  socratic_mode: false         # agent may provide full implementations
+  allow_full_code_spoiler: true
+```
+
+> [!NOTE]
+> Even with `socratic_mode: false`, the **deterministic verification boundary is never bypassed**: the agent still cannot mark a module as completed without the CLI's SHA-256 test integrity check passing. The Socratic constraint governs *how* the agent teaches, not *how* completion is validated.
+
+---
+
 ## Comparison Matrix
 
 | Dimension | Traditional Video LMS (Coursera, Udemy) | SDD Harnesses (OpenSpec, Spec-Kit) | Spec-Driven Learning (SpecLearn) |
@@ -52,7 +92,7 @@ Under SDL:
 | **Feedback Loop** | Multiple-choice quizzes / None | Git diff inspection | Socratic dialogue + instant test execution |
 | **Context Integration** | Isolated toy browser playground | Target codebase | **Dual-Layer**: Tech concepts + Real repo MCP/ADRs |
 | **Anti-Cheat Verification** | Honor system | CI unit tests on agent output | Deterministic test runner + SHA-256 test integrity |
-| **Harness Compatibility** | Web browser only | Terminal / agent-specific | Claude Code, GitHub Copilot, Gemini CLI, Cursor |
+| **Harness Compatibility** | Web browser only | Terminal / agent-specific | Universal (Claude Code, GitHub Copilot, Antigravity, Cursor, and any agent via `.agents/skills/`) |
 
 ---
 
@@ -70,28 +110,6 @@ flowchart TD
     D -- "Test Fails" --> C
     D -- "Passes (Exit Code 0 + SHA-256 Valid)" --> E["Advance Progress State\n(.speclearn/state/progress.json)"]
     E --> B
-```
-
-```text
-  +-----------------------------------------------------------------+
-  |                  THE 4-STAGE PEDAGOGICAL LOOP                   |
-  +-----------------------------------------------------------------+
-         |
-         v
-  [ 1. MEASURE ] ----------> Assess current understanding & prerequisites
-         |
-         v
-  [ 2. PLAN ] -------------> Assemble module Directed Acyclic Graph (DAG)
-         |
-         v
-  [ 3. TEACH & SCAFFOLD ] -> Socratic questioning, concepts scratchpad,
-         |                   no full-code spoilers allowed
-         v
-  [ 4. VERIFY ] -----------> Deterministic test runner (`speclearn verify`)
-         |
-         +--- [FAIL] ------> Inspect failure traces, receive Socratic hints
-         |
-         +--- [PASS] ------> SHA-256 test hash verified -> Unlock next module
 ```
 
 ### 2. Dual-Layer Knowledge Architecture
@@ -112,7 +130,7 @@ graph LR
             A3["Production Codebase"]
         end
     end
-    L1 --> AGENT["Socratic Agent Harness\n(Claude / Copilot / Gemini / Cursor)"]
+    L1 --> AGENT["Socratic Agent Harness\n(Claude / Copilot / Antigravity / Cursor / Any Agent)"]
     L2 --> AGENT
     AGENT --> LEARNER["Developer / Learner in IDE"]
 ```
@@ -132,14 +150,15 @@ npx speclearn init
 Or initialize specific agent adapters non-interactively:
 
 ```bash
-npx speclearn init --agents claude,copilot,gemini,cursor --yes
+npx speclearn init --agents claude,copilot,antigravity,cursor,generic --yes
 ```
 
 This compiles native skills and slash commands directly into your coding agent's configuration directories:
-- **Claude Code**: `.claude/commands/`
+- **Claude Code**: `.claude/commands/slx/`
 - **GitHub Copilot**: `.github/prompts/`
 - **Cursor**: `.cursor/rules/`
-- **Gemini CLI**: `.gemini/`
+- **Antigravity**: `.gemini/commands/` & `ANTIGRAVITY.md`
+- **Generic / Any Coding Agent**: `.agents/skills/slx-*/` & `AGENTS.md`
 
 ### Step 2: Learn with Slash Commands
 

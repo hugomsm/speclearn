@@ -1,8 +1,8 @@
-import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { initializeWorkspace, parseAgentIds } from "../src/init/initialize.js";
+import { detectWorkspaceAgents, initializeWorkspace, parseAgentIds } from "../src/init/initialize.js";
 
 describe("SpecLearn workspace initialization", () => {
   it("creates required directories and config without losing existing content", async () => {
@@ -41,12 +41,30 @@ describe("SpecLearn workspace initialization", () => {
   });
 
   it("parses and validates agent identifiers", () => {
-    expect(parseAgentIds("claude,copilot,gemini,cursor,claude")).toEqual([
+    expect(parseAgentIds("claude,copilot,antigravity,cursor,generic,claude")).toEqual([
       "claude",
       "copilot",
-      "gemini",
+      "antigravity",
       "cursor",
+      "generic",
     ]);
     expect(() => parseAgentIds("claude,unknown")).toThrow("Unsupported agent(s): unknown");
+  });
+
+  it("detects present and absent agent directories in workspace", async () => {
+    const root = await mkdtemp(join(tmpdir(), "speclearn-detect-"));
+
+    try {
+      expect(await detectWorkspaceAgents(root)).toEqual([]);
+
+      await mkdir(join(root, ".claude"), { recursive: true });
+      await mkdir(join(root, ".cursor"), { recursive: true });
+      await mkdir(join(root, ".agents"), { recursive: true });
+
+      const detected = await detectWorkspaceAgents(root);
+      expect(detected).toEqual(["claude", "cursor", "generic"]);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });

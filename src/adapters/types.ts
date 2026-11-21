@@ -1,4 +1,4 @@
-export type BuiltInAgentId = "claude" | "copilot" | "gemini" | "cursor";
+export type BuiltInAgentId = "claude" | "copilot" | "antigravity" | "cursor" | "generic";
 
 export interface AgentAdapter {
   id: BuiltInAgentId | (string & {});
