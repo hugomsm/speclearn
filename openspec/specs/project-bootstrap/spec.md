@@ -6,11 +6,16 @@ Project bootstrap initializes a SpecLearn workspace and provides interactive or 
 ## Requirements
 
 ### Requirement: Interactive initialization
-The CLI SHALL provide an interactive `init` command that uses terminal prompts to select coding agents and SHALL create the local SpecLearn workspace.
+The CLI SHALL provide an interactive `init` command that uses terminal prompts with assistant auto-detection, keyboard selection, and visual progress feedback to create the local SpecLearn workspace.
 
 #### Scenario: User initializes interactively
 - **WHEN** the user runs `speclearn init` in an interactive terminal
-- **THEN** the CLI SHALL present supported coding-agent choices and SHALL create only the adapters selected by the user
+- **THEN** the CLI SHALL display a structured initialization header
+- **AND** SHALL inspect the workspace for existing agent directories (`.claude/`, `.github/`, `.gemini/`, `.cursor/`, `.agents/`)
+- **AND** SHALL present supported coding-agent choices with detected agents preselected
+- **AND** SHALL display destination path hints for each agent option
+- **AND** SHALL show progress feedback while bootstrapping selected adapters
+- **AND** SHALL create only the adapters selected by the user
 
 #### Scenario: Interactive selection is cancelled
 - **WHEN** the user cancels or declines initialization
@@ -20,7 +25,7 @@ The CLI SHALL provide an interactive `init` command that uses terminal prompts t
 The CLI SHALL support `--agents` with a comma-separated agent list and `--yes` for unattended initialization.
 
 #### Scenario: Supported agents are declared
-- **WHEN** the user runs `speclearn init --agents claude,copilot,gemini,cursor --yes`
+- **WHEN** the user runs `speclearn init --agents claude,copilot,antigravity,cursor,generic --yes`
 - **THEN** the CLI SHALL initialize the workspace and generate outputs for every supported selected agent
 
 #### Scenario: Unsupported agent is declared

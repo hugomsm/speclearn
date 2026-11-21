@@ -30,13 +30,23 @@ Every built-in adapter SHALL generate complete `propose`, `start`, `explain`, an
 - **AND** SHALL include the same complete SDL behavior and managed guardrails
 
 #### Scenario: Gemini CLI commands are generated
-- **WHEN** Gemini CLI is selected
+- **WHEN** Antigravity (formerly Gemini CLI) is selected
+- **THEN** the adapter SHALL maintain native `/slx:*` command representations under `.gemini/commands/`
+
+#### Scenario: Antigravity commands are generated
+- **WHEN** Antigravity is selected
 - **THEN** the adapter SHALL write native `/slx:*` command representations under `.gemini/commands/`
+- **AND** SHALL write managed guardrails to `ANTIGRAVITY.md`
 - **AND** SHALL include the complete SDL workflow and language mirroring rules
 
 #### Scenario: Cursor rules are generated
 - **WHEN** Cursor is selected
 - **THEN** the adapter SHALL write `.cursor/rules/speclearn.mdc` containing the complete `/slx` command behavior and system guardrails
+
+#### Scenario: Generic agent skills are generated
+- **WHEN** Generic Agent is selected
+- **THEN** the adapter SHALL write standalone skills with YAML frontmatter under `.agents/skills/slx-propose/SKILL.md`, `.agents/skills/slx-start/SKILL.md`, `.agents/skills/slx-explain/SKILL.md`, and `.agents/skills/slx-verify/SKILL.md`
+- **AND** SHALL write managed system guardrails to `AGENTS.md`
 
 ### Requirement: Managed guardrails
 Adapter output SHALL include system guardrails that prohibit LLM API calls inside the CLI binary and require deterministic verification behavior.

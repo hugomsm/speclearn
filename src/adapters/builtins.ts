@@ -78,9 +78,9 @@ export const copilotAdapter: AgentAdapter = {
   },
 };
 
-export const geminiAdapter: AgentAdapter = {
-  id: "gemini",
-  name: "Gemini CLI",
+export const antigravityAdapter: AgentAdapter = {
+  id: "antigravity",
+  name: "Antigravity",
   async apply(projectRoot: string) {
     for (const [name, template] of Object.entries(SLX_COMMAND_TEMPLATES)) {
       await writeFileIdempotent(
@@ -88,7 +88,7 @@ export const geminiAdapter: AgentAdapter = {
         template,
       );
     }
-    await updateManagedSection(join(projectRoot, "GEMINI.md"), managedSection());
+    await updateManagedSection(join(projectRoot, "ANTIGRAVITY.md"), managedSection());
   },
 };
 
@@ -107,5 +107,47 @@ export const cursorAdapter: AgentAdapter = {
       ...Object.values(SLX_COMMAND_TEMPLATES),
     ].join("\n");
     await writeFileIdempotent(join(projectRoot, ".cursor", "rules", "speclearn.mdc"), content);
+  },
+};
+
+export const genericAdapter: AgentAdapter = {
+  id: "generic",
+  name: "Generic Agent (.agents/skills)",
+  async apply(projectRoot: string) {
+    const commands = {
+      propose: {
+        name: "slx-propose",
+        description: "Propose a new SpecLearn course based on repository architecture and ADRs",
+      },
+      start: {
+        name: "slx-start",
+        description: "Activate an isolated SpecLearn course module environment",
+      },
+      explain: {
+        name: "slx-explain",
+        description: "Teach and experiment with a universal concept in an isolated scratchpad",
+      },
+      verify: {
+        name: "slx-verify",
+        description: "Run deterministic verification for the active course module",
+      },
+    };
+
+    for (const [key, meta] of Object.entries(commands)) {
+      const template = SLX_COMMAND_TEMPLATES[key as keyof typeof SLX_COMMAND_TEMPLATES];
+      const content = [
+        "---",
+        `name: ${meta.name}`,
+        `description: ${meta.description}`,
+        "---",
+        "",
+        template,
+      ].join("\n");
+      await writeFileIdempotent(
+        join(projectRoot, ".agents", "skills", meta.name, "SKILL.md"),
+        content,
+      );
+    }
+    await updateManagedSection(join(projectRoot, "AGENTS.md"), managedSection());
   },
 };

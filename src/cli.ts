@@ -7,7 +7,7 @@ import {
   formatCourseSpecIssues,
   loadSpec,
 } from "./parser/load-spec.js";
-import { initializeWorkspace, parseAgentIds } from "./init/initialize.js";
+import { initializeWorkspace, parseAgentIds, detectWorkspaceAgents } from "./init/initialize.js";
 import {
   createEmptyProgress,
   readProgress,
@@ -63,14 +63,19 @@ export function createCli(): Command {
   program
     .command("init")
     .description("Initialize SpecLearn in the current project")
-    .option("--agents <agents>", "comma-separated agents: claude,copilot,gemini,cursor")
+    .option("--agents <agents>", "comma-separated agents: claude,copilot,antigravity,cursor,generic")
     .option("--yes", "accept the selected agents without prompting")
     .action(async (options: { agents?: string; yes?: boolean }) => {
       try {
+        const isInteractive = Boolean(process.stdin.isTTY && !options.yes);
+        if (isInteractive) {
+          clack.intro(pc.bold("SpecLearn Initialization"));
+        }
+
         let agentIds: string[];
         if (options.agents) {
           agentIds = parseAgentIds(options.agents);
-          if (!options.yes && process.stdin.isTTY) {
+          if (isInteractive) {
             const confirm = await clack.confirm({
               message: `Initialize adapters: ${agentIds.join(", ")}?`,
               initialValue: true,
@@ -80,15 +85,18 @@ export function createCli(): Command {
               return;
             }
           }
-        } else if (process.stdin.isTTY && !options.yes) {
+        } else if (isInteractive) {
+          const detected = await detectWorkspaceAgents(process.cwd());
           const selected = await clack.multiselect({
-            message: "Select coding agents",
+            message: "Select coding agents (Space to toggle, Enter to confirm)",
             options: [
-              { value: "claude", label: "Claude Code" },
-              { value: "copilot", label: "GitHub Copilot" },
-              { value: "gemini", label: "Gemini CLI" },
-              { value: "cursor", label: "Cursor" },
+              { value: "claude", label: "Claude Code", hint: ".claude/commands/slx/" },
+              { value: "copilot", label: "GitHub Copilot", hint: ".github/prompts/" },
+              { value: "antigravity", label: "Antigravity", hint: ".gemini/commands/ & ANTIGRAVITY.md" },
+              { value: "cursor", label: "Cursor", hint: ".cursor/rules/speclearn.mdc" },
+              { value: "generic", label: "Generic Agent", hint: ".agents/skills/ & AGENTS.md" },
             ],
+            initialValues: detected,
             required: false,
           });
           if (clack.isCancel(selected)) {
@@ -100,8 +108,22 @@ export function createCli(): Command {
           agentIds = [];
         }
 
+        const spinner = isInteractive ? clack.spinner() : null;
+        if (spinner) {
+          spinner.start("Bootstrapping agent skills and guardrails...");
+        }
+
         await initializeWorkspace({ projectRoot: process.cwd(), agents: agentIds });
         await createEmptyProgress(process.cwd());
+
+        if (spinner) {
+          spinner.stop(
+            agentIds.length > 0
+              ? `Bootstrapped ${agentIds.join(", ")} skills and guardrails`
+              : "SpecLearn workspace initialized (no agent adapters selected)",
+          );
+        }
+
         clack.outro(pc.green("SpecLearn workspace initialized"));
       } catch (error) {
         clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));

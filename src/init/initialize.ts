@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createBuiltInAdapterRegistry } from "../adapters/index.js";
 
@@ -51,7 +51,7 @@ export async function initializeWorkspace(options: InitOptions): Promise<void> {
 }
 
 export function parseAgentIds(value: string): string[] {
-  const supported = new Set(["claude", "copilot", "gemini", "cursor"]);
+  const supported = new Set(["claude", "copilot", "antigravity", "cursor", "generic"]);
   const ids = value
     .split(",")
     .map((entry) => entry.trim().toLowerCase())
@@ -59,8 +59,36 @@ export function parseAgentIds(value: string): string[] {
 
   const unsupported = ids.filter((id) => !supported.has(id));
   if (unsupported.length > 0) {
-    throw new Error(`Unsupported agent(s): ${unsupported.join(", ")}. Supported agents: claude, copilot, gemini, cursor`);
+    throw new Error(`Unsupported agent(s): ${unsupported.join(", ")}. Supported agents: claude, copilot, antigravity, cursor, generic`);
   }
 
   return [...new Set(ids)];
+}
+
+async function directoryExists(targetPath: string): Promise<boolean> {
+  try {
+    const s = await stat(targetPath);
+    return s.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+export async function detectWorkspaceAgents(projectRoot: string): Promise<string[]> {
+  const detected: string[] = [];
+  const checks: Array<{ dir: string; id: string }> = [
+    { dir: ".claude", id: "claude" },
+    { dir: ".github", id: "copilot" },
+    { dir: ".gemini", id: "antigravity" },
+    { dir: ".cursor", id: "cursor" },
+    { dir: ".agents", id: "generic" },
+  ];
+
+  for (const check of checks) {
+    if (await directoryExists(join(projectRoot, check.dir))) {
+      detected.push(check.id);
+    }
+  }
+
+  return detected;
 }
