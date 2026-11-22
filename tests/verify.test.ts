@@ -143,4 +143,48 @@ describe("deterministic verification", () => {
       await rm(root, { recursive: true, force: true });
     }
   });
+
+  it("blocks module completion when regression_command fails", async () => {
+    const root = await mkdtemp(join(tmpdir(), "speclearn-regression-"));
+
+    try {
+      const regressionCourse = `schema_version: "1.0"
+id: regression-course
+title: Regression Course
+author: SpecLearn Team
+tier: official
+level: beginner
+estimated_hours: 1
+mode: workspace
+modules:
+  - id: feature-module
+    title: Feature Module
+    universal_concepts: [Testing]
+    arch_context: [Node.js]
+    verification:
+      test_command: node -e "process.exit(0)"
+      rubric_checks:
+        - Feature passes tests
+      regression_command: node -e "process.exit(1)"
+`;
+      await writeFile(join(root, "course.course.yaml"), regressionCourse, "utf8");
+
+      await writeProgress(root, {
+        active_course_id: "regression-course",
+        active_course_path: join(root, "course.course.yaml"),
+        sandbox: {},
+        modules: [{ id: "feature-module", status: "available" }],
+      });
+
+      const result = await verifyModule(root, "feature-module");
+      expect(result.completed).toBe(false);
+      expect(result.exitCode).toBe(0); // feature tests passed
+      expect(result.regressionExitCode).not.toBe(0); // regression failed
+
+      const state = await readProgress(root);
+      expect(state?.modules[0]?.status).not.toBe("completed");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
 });

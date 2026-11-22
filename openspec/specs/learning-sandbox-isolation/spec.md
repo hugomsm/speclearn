@@ -20,6 +20,10 @@ The CLI SHALL inspect repository cleanliness before creating a learning sandbox.
 - **WHEN** the project does not contain a Git repository
 - **THEN** the CLI SHALL fall back to `.speclearn/sandbox/` isolation and SHALL record the sandbox path
 
+#### Scenario: Workspace delivery mode bypasses sandbox creation
+- **WHEN** the user runs `speclearn start <course>` and the effective session mode is `workspace`
+- **THEN** the CLI SHALL track progress directly in the workspace without creating a sandbox branch or directory
+
 ### Requirement: Sandbox isolation strategy
 The CLI SHALL isolate learning work using a `speclearn/` Git branch or `.speclearn/sandbox/` directory.
 
@@ -30,6 +34,10 @@ The CLI SHALL isolate learning work using a `speclearn/` Git branch or `.speclea
 #### Scenario: Directory isolation is available
 - **WHEN** branch isolation is unavailable or explicitly rejected
 - **THEN** the CLI SHALL use `.speclearn/sandbox/` as the isolated training location
+
+#### Scenario: Workspace mode operates in place
+- **WHEN** the active course has effective session mode `workspace`
+- **THEN** the CLI SHALL leave workspace files in place and SHALL not switch branches or redirect to `.speclearn/sandbox/`
 
 ### Requirement: Skip mastered module
 The CLI SHALL provide `speclearn skip <module>` for demonstrated mastery and SHALL unlock only prerequisite-valid downstream nodes.

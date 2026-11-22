@@ -23,7 +23,7 @@ The `/slx:propose` skill SHALL inspect the repository, ask no more than three ca
 #### Scenario: Repository author proposes a course
 - **WHEN** the agent receives `/slx:propose`
 - **THEN** it SHALL inspect the repository stack, structure, and configured MCP resources
-- **AND** SHALL ask no more than three concise questions for missing target level, learning outcome, or Markdown versus YAML preference
+- **AND** SHALL ask no more than three concise questions for missing target level, learning outcome, delivery mode (`sandbox` vs `workspace` if not specified via flag or prompt), or Markdown versus YAML preference
 - **AND** SHALL not invent repository resources, test files, or verification commands
 
 #### Scenario: Course spec is generated
@@ -41,6 +41,10 @@ The `/slx:propose` skill SHALL inspect the repository, ask no more than three ca
 #### Scenario: Existing course path is selected
 - **WHEN** the generated course ID maps to an existing output file
 - **THEN** the skill SHALL ask whether to update that course or choose another ID before writing
+
+#### Scenario: Workspace delivery mode is proposed via flag or intent
+- **WHEN** `/slx:propose` receives `--workspace` or detects feature-delivery intent from prompt context or existing architecture decisions
+- **THEN** the skill SHALL generate a `mode: workspace` COURSE-SPEC mapping module work directly to real repository `target_files`
 
 ### Requirement: Start skill Socratic loop
 The `/slx:start` skill SHALL guide learning through measurement, planning, and scaffolded teaching stages.
@@ -64,6 +68,16 @@ The `/slx:start` skill SHALL guide learning through measurement, planning, and s
 - **THEN** it SHALL insert `# TODO(speclearn)` markers and failing tests instead of full solution code
 - **AND** SHALL withhold complete solution code until the verification checkpoint is reached
 
+#### Scenario: Delivery mode announcement and session override
+- **WHEN** the student starts a module in `/slx:start`
+- **THEN** the skill SHALL announce the course's configured delivery mode (`sandbox` or `workspace`) before scaffolding
+- **AND** SHALL offer the student a quick confirmation or option to switch modes for their session
+- **AND** SHALL persist any session mode override in local progress state without modifying the COURSE-SPEC file
+
+#### Scenario: Workspace mode guides edits in target files
+- **WHEN** a student begins a module in a `mode: workspace` course or active workspace session
+- **THEN** the skill SHALL guide edits directly within declared `target_files` without full implementation spoilers and SHALL keep git diffs PR-ready
+
 ### Requirement: Explain skill workflow
 The `/slx:explain [concept]` skill SHALL pause the project lab and teach a concept in an isolated scratchpad before returning.
 
@@ -71,6 +85,7 @@ The `/slx:explain [concept]` skill SHALL pause the project lab and teach a conce
 - **WHEN** the student invokes `/slx:explain` with a concept
 - **THEN** the skill SHALL create a minimal runnable example under `.speclearn/scratchpad/`
 - **AND** SHALL keep the main lab unchanged
+- **AND** SHALL never write temporary or scratchpad files inside production folders or target files
 
 #### Scenario: Scratchpad concept is understood
 - **WHEN** the isolated example is understood
@@ -97,3 +112,8 @@ The `/slx:verify` skill SHALL invoke deterministic verification and SHALL provid
 #### Scenario: Integrity verification fails
 - **WHEN** a test file is deleted, empty, or differs from its locked hash
 - **THEN** the agent SHALL explain that the test files appear to have been changed and SHALL request restoration or re-locking through explicit project-authorized action
+
+#### Scenario: Regression command execution in workspace mode
+- **WHEN** a module defines `regression_command` and targeted feature tests pass with tamper-proof verification
+- **THEN** verification SHALL run the regression command before marking the module completed
+- **AND** SHALL report regression failure without advancing the learning path if the regression command fails

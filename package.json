@@ -52,7 +52,7 @@
     "type": "git",
     "url": "git+https://github.com/hugomsm/speclearn.git"
   },
-  "homepage": "https://github.com/hugomsm/speclearn#readme",
+  "homepage": "https://speclearn.dev",
   "bugs": {
     "url": "https://github.com/hugomsm/speclearn/issues"
   }

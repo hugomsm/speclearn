@@ -88,7 +88,7 @@ The CLI SHALL expose `status` to read and render local learning progress.
 
 ### Requirement: Start course command
 
-The CLI SHALL provide `speclearn start <course>` to activate course progress and initialize a safe sandbox.
+The CLI SHALL provide `speclearn start <course>` with optional `--sandbox` or `--workspace` flags to activate course progress, establish the effective delivery mode, and initialize a safe sandbox when operating in sandbox mode.
 
 #### Scenario: Course starts safely
 
@@ -99,6 +99,12 @@ The CLI SHALL provide `speclearn start <course>` to activate course progress and
 
 - **WHEN** Git has unrelated changes and no safe isolation choice is accepted
 - **THEN** the CLI SHALL not modify the production workspace or active progress
+
+#### Scenario: Delivery mode override is provided
+
+- **WHEN** the user runs `speclearn start <course> --workspace` or `speclearn start <course> --sandbox`
+- **THEN** the CLI SHALL record the specified delivery mode in progress state as the session override
+- **AND** SHALL not mutate the source COURSE-SPEC file
 
 ### Requirement: Skip mastered module command
 
@@ -122,6 +128,11 @@ The CLI SHALL expose `verify [module-id]` for deterministic module verification.
 
 - **WHEN** the user runs `speclearn verify [module-id]`
 - **THEN** the CLI SHALL execute the module test command and integrity checks and SHALL set a non-zero process status on failure
+
+#### Scenario: Regression command runs on feature test success
+
+- **WHEN** the module declares a `regression_command` and feature tests pass
+- **THEN** the CLI SHALL run the regression command and require exit code 0 before marking the module completed
 
 ### Requirement: Lock-tests command
 

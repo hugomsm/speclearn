@@ -21,6 +21,10 @@ export interface VerificationResult {
   rubricChecks: string[];
   gitDiff: string;
   completed: boolean;
+  regressionCommand?: string;
+  regressionExitCode?: number;
+  regressionStdout?: string;
+  regressionStderr?: string;
 }
 
 async function findCoursePath(projectRoot: string, state: ProgressState): Promise<string> {
@@ -118,11 +122,19 @@ export async function verifyModule(projectRoot: string, requestedModuleId?: stri
   const module = resolveModule(course, state, requestedModuleId);
   const progressModule = state.modules.find((item) => item.id === module.id);
 
-  const integrity = await verifyTestFiles(
-    projectRoot,
-    progressModule?.test_file_sha256,
-    module.verification.test_files ?? [],
-  );
+  const testFiles = module.verification.test_files ?? [];
+  let integrity: Awaited<ReturnType<typeof verifyTestFiles>>;
+
+  if (testFiles.length === 0) {
+    // No test files declared — integrity check is not applicable; treat as valid.
+    integrity = { valid: true, hashes: {}, errors: [] };
+  } else {
+    integrity = await verifyTestFiles(
+      projectRoot,
+      progressModule?.test_file_sha256,
+      testFiles,
+    );
+  }
 
   if (!integrity.valid) {
     return {
@@ -153,6 +165,29 @@ export async function verifyModule(projectRoot: string, requestedModuleId?: stri
       gitDiff: await gitDiff(projectRoot),
       completed: false,
     };
+  }
+
+  // Run optional regression command before marking complete
+  if (module.verification.regression_command) {
+    const regressionResult = await runCommand(module.verification.regression_command, projectRoot);
+    if (regressionResult.exitCode !== 0) {
+      return {
+        courseId: course.id,
+        moduleId: module.id,
+        testCommand: module.verification.test_command,
+        exitCode: 0,
+        stdout: result.stdout,
+        stderr: result.stderr,
+        integrityErrors,
+        rubricChecks: module.verification.rubric_checks,
+        gitDiff: await gitDiff(projectRoot),
+        completed: false,
+        regressionCommand: module.verification.regression_command,
+        regressionExitCode: regressionResult.exitCode,
+        regressionStdout: regressionResult.stdout,
+        regressionStderr: regressionResult.stderr,
+      };
+    }
   }
 
   const verificationSignature = createVerificationSignature(

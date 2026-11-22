@@ -1,0 +1,201 @@
+{
+  "$ref": "#/definitions/COURSE-SPEC",
+  "definitions": {
+    "COURSE-SPEC": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "official",
+            "community",
+            "personal"
+          ]
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "beginner",
+            "intermediate",
+            "advanced"
+          ]
+        },
+        "estimated_hours": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 1,
+          "default": "auto"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "sandbox",
+            "workspace"
+          ],
+          "default": "sandbox"
+        },
+        "context_sources": {
+          "type": "object",
+          "properties": {
+            "mcp_resources": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "default": []
+            },
+            "mandatory_adrs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "default": []
+            },
+            "reference_repo": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "harness_rules": {
+          "type": "object",
+          "properties": {
+            "socratic_mode": {
+              "type": "boolean",
+              "default": true
+            },
+            "allow_full_code_spoiler": {
+              "type": "boolean",
+              "default": false
+            },
+            "scratchpad_enabled": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/COURSE-SPEC/properties/id"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prerequisites": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/COURSE-SPEC/properties/id"
+                },
+                "default": []
+              },
+              "universal_concepts": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "arch_context": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "target_files": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "verification": {
+                "type": "object",
+                "properties": {
+                  "test_command": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "test_files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "rubric_checks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "regression_command": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "test_command",
+                  "rubric_checks"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "universal_concepts",
+              "arch_context",
+              "verification"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "title",
+        "author",
+        "tier",
+        "level",
+        "estimated_hours",
+        "modules"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -133,15 +133,22 @@ export function createCli(): Command {
 
   program
     .command("start")
-    .description("Start a COURSE-SPEC in an isolated sandbox")
+    .description("Start a COURSE-SPEC in sandbox or workspace mode")
     .argument("<course>", "path to a COURSE-SPEC Markdown or YAML file")
-    .action(async (coursePath: string) => {
+    .option("--workspace", "run in workspace mode — guide edits in real project files (overrides course setting)")
+    .option("--sandbox", "run in sandbox mode — isolated branch or directory (overrides course setting)")
+    .action(async (coursePath: string, options: { workspace?: boolean; sandbox?: boolean }) => {
       try {
-        const result = await startCourse(process.cwd(), coursePath);
-        const location = result.sandbox.branch
-          ? `branch ${result.sandbox.branch}`
-          : `directory ${result.sandbox.path ?? ".speclearn/sandbox/"}`;
-        clack.outro(pc.green(`Started ${result.courseId} in ${location}`));
+        const modeOverride: "sandbox" | "workspace" | undefined =
+          options.workspace ? "workspace" : options.sandbox ? "sandbox" : undefined;
+        const result = await startCourse(process.cwd(), coursePath, { mode: modeOverride });
+        const modeLabel = result.mode === "workspace" ? "workspace mode" : "sandbox";
+        const location = result.mode === "workspace"
+          ? "workspace (real project files)"
+          : result.sandbox.branch
+            ? `branch ${result.sandbox.branch}`
+            : `directory ${result.sandbox.path ?? ".speclearn/sandbox/"}`;
+        clack.outro(pc.green(`Started ${result.courseId} in ${location} [${modeLabel}]`));
       } catch (error) {
         clack.log.error(pc.red(error instanceof Error ? error.message : String(error)));
         process.exitCode = 1;
