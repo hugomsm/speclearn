@@ -47,7 +47,7 @@ The `/slx:propose` skill SHALL inspect the repository, ask no more than three ca
 - **THEN** the skill SHALL generate a `mode: workspace` COURSE-SPEC mapping module work directly to real repository `target_files`
 
 ### Requirement: Start skill Socratic loop
-The `/slx:start` skill SHALL guide learning through measurement, planning, and scaffolded teaching stages.
+The `/slx:start` skill SHALL guide learning through measurement, planning, scaffolded teaching stages, and disciplined Socratic pacing.
 
 #### Scenario: Diagnostic measurement begins
 - **WHEN** the student starts a module
@@ -78,6 +78,18 @@ The `/slx:start` skill SHALL guide learning through measurement, planning, and s
 - **WHEN** a student begins a module in a `mode: workspace` course or active workspace session
 - **THEN** the skill SHALL guide edits directly within declared `target_files` without full implementation spoilers and SHALL keep git diffs PR-ready
 
+#### Scenario: Socratic pacing and turn-taking
+- **WHEN** the agent guides a learner through a module
+- **THEN** it SHALL ask only one focused question at a time and SHALL wait for the learner's response before providing additional hints or scaffolding
+
+#### Scenario: Gradual hint escalation
+- **WHEN** the learner asks for assistance or appears stuck
+- **THEN** the agent SHALL escalate hints gradually in small tiers (conceptual question → architectural pointer → partial scaffold) rather than revealing complete code
+
+#### Scenario: Direct code generation request refused
+- **WHEN** the learner requests full solution code or asks the agent to implement the module
+- **THEN** the agent SHALL refuse the direct solution request and SHALL redirect the learner to active TODO markers, business rules and edge cases, or test diagnostics
+
 ### Requirement: Explain skill workflow
 The `/slx:explain [concept]` skill SHALL pause the project lab and teach a concept in an isolated scratchpad before returning.
 
@@ -87,8 +99,13 @@ The `/slx:explain [concept]` skill SHALL pause the project lab and teach a conce
 - **AND** SHALL keep the main lab unchanged
 - **AND** SHALL never write temporary or scratchpad files inside production folders or target files
 
+#### Scenario: Micro-example Socratic iteration
+- **WHEN** explaining a concept
+- **THEN** the skill SHALL demonstrate the idea using short, interactive micro-examples instead of long lecture text
+- **AND** SHALL pose a check-for-understanding question before concluding the explanation
+
 #### Scenario: Scratchpad concept is understood
-- **WHEN** the isolated example is understood
+- **WHEN** the isolated example is understood and the understanding check is confirmed
 - **THEN** the skill SHALL summarize the concept and return smoothly to the main lab context
 
 ### Requirement: Verify skill boundary
@@ -106,8 +123,8 @@ The `/slx:verify` skill SHALL invoke deterministic verification and SHALL provid
 
 #### Scenario: Verification fails
 - **WHEN** `npx speclearn verify [module-id]` exits with a non-zero status
-- **THEN** the agent SHALL analyze stdout and stderr and SHALL ask a guiding Socratic question
-- **AND** SHALL not edit the student's code or mark the module completed
+- **THEN** the agent SHALL analyze stdout and stderr and SHALL ask exactly one guiding diagnostic Socratic question
+- **AND** SHALL strictly refuse to patch the student's code or mark the module completed
 
 #### Scenario: Integrity verification fails
 - **WHEN** a test file is deleted, empty, or differs from its locked hash
