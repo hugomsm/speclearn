@@ -4,7 +4,7 @@ import { createLearningBranch, createSandboxDirectory, inspectGitStatus } from "
 
 export interface StartOptions {
   /** Override the delivery mode for this session without mutating the course file. */
-  mode?: "sandbox" | "workspace";
+  mode?: "sandbox" | "workspace" | undefined;
 }
 
 export interface StartResult {
