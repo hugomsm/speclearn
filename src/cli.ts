@@ -14,7 +14,7 @@ import {
   renderDagStatus,
   renderProgressBar,
 } from "./state/progress.js";
-import { startCourse } from "./sandbox/start.js";
+import { startCourse, type StartOptions } from "./sandbox/start.js";
 import { skipModule } from "./sandbox/skip.js";
 import { lockModuleTests, verifyModule } from "./commands/verify.js";
 
@@ -141,7 +141,8 @@ export function createCli(): Command {
       try {
         const modeOverride: "sandbox" | "workspace" | undefined =
           options.workspace ? "workspace" : options.sandbox ? "sandbox" : undefined;
-        const result = await startCourse(process.cwd(), coursePath, { mode: modeOverride });
+        const startOptions: StartOptions = modeOverride ? { mode: modeOverride } : {};
+        const result = await startCourse(process.cwd(), coursePath, startOptions);
         const modeLabel = result.mode === "workspace" ? "workspace mode" : "sandbox";
         const location = result.mode === "workspace"
           ? "workspace (real project files)"
