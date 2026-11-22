@@ -1,5 +1,11 @@
 # speclearn
 
+## 0.4.2
+
+### Patch Changes
+
+- b8f6385: Refining skill templates
+
 ## 0.4.1
 
 ### Patch Changes
