@@ -1,5 +1,11 @@
 # speclearn
 
+## 0.4.1
+
+### Patch Changes
+
+- 398648e: Fix CI Workflow
+
 ## 0.4.0
 
 ### Minor Changes
