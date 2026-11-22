@@ -1,5 +1,11 @@
 # speclearn
 
+## 0.4.0
+
+### Minor Changes
+
+- 78a78a7: Adding workspace delivery mode (learn while building your real project)
+
 ## 0.3.2
 
 ### Patch Changes
