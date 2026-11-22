@@ -27,6 +27,7 @@ describe("SpecLearn progress state", () => {
   it("validates module statuses and hashes", () => {
     expect(progressStateSchema.safeParse({
       active_course_id: "typescript-basics",
+      mode: "workspace",
       sandbox: { branch: "learning/typescript-basics", path: "./sandbox" },
       modules: [{
         id: "types-and-values",
@@ -36,6 +37,11 @@ describe("SpecLearn progress state", () => {
         completed_at: "2026-11-19T12:00:00.000Z",
       }],
     }).success).toBe(true);
+
+    expect(progressStateSchema.safeParse({
+      mode: "invalid-mode",
+      modules: [],
+    }).success).toBe(false);
 
     expect(progressStateSchema.safeParse({
       modules: [{ id: "broken", status: "unknown" }],

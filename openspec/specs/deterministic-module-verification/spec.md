@@ -27,6 +27,10 @@ The verifier SHALL execute the module's `verification.test_command` locally and 
 - **WHEN** the test command is missing or the process cannot be launched
 - **THEN** the CLI SHALL report a verification failure with diagnostic output and SHALL not mark the module completed
 
+#### Scenario: Regression command is executed
+- **WHEN** a module defines a `regression_command` and test command execution succeeds
+- **THEN** the verifier SHALL execute the declared regression command locally and capture its exit code, stdout, and stderr
+
 ### Requirement: Verification result reporting
 The CLI SHALL report test success or failure in a stable, terminal-readable format using plain language that describes outcomes in terms of learning progress.
 
@@ -37,3 +41,7 @@ The CLI SHALL report test success or failure in a stable, terminal-readable form
 #### Scenario: Tests fail
 - **WHEN** test execution returns an exit code other than 0
 - **THEN** the CLI SHALL report stdout and stderr, SHALL preserve module completion state, and SHALL not claim completion
+
+#### Scenario: Regression command failure blocks completion
+- **WHEN** regression command execution returns a non-zero exit code
+- **THEN** the CLI SHALL report the regression failure stdout and stderr, SHALL preserve module completion state, and SHALL not advance the learning path

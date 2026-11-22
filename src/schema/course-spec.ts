@@ -30,6 +30,11 @@ export const moduleVerificationSchema = z.object({
     .min(1, "test_command must be a non-empty string"),
   test_files: z.array(z.string().min(1)).optional(),
   rubric_checks: z.array(z.string().min(1)),
+  regression_command: z
+    .string()
+    .trim()
+    .min(1, "regression_command must be a non-empty string")
+    .optional(),
 });
 
 export const courseModuleSchema = z.object({
@@ -38,6 +43,7 @@ export const courseModuleSchema = z.object({
   prerequisites: z.array(kebabCaseSchema).default([]),
   universal_concepts: z.array(z.string().min(1)),
   arch_context: z.array(z.string().min(1)),
+  target_files: z.array(z.string().min(1)).optional(),
   verification: moduleVerificationSchema,
 });
 
@@ -51,6 +57,7 @@ export const courseSpecSchema = z
     level: z.enum(["beginner", "intermediate", "advanced"]),
     estimated_hours: z.number().positive(),
     locale: z.string().trim().min(1).default("auto"),
+    mode: z.enum(["sandbox", "workspace"]).default("sandbox"),
     context_sources: contextSourcesSchema,
     harness_rules: harnessRulesSchema,
     modules: z.array(courseModuleSchema).min(1, "At least one module is required"),

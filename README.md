@@ -235,6 +235,61 @@ Explore our canonical examples in [`examples/`](examples/):
 
 ---
 
+## Delivery Modes
+
+COURSE-SPEC supports two delivery modes via the `mode` field. Choose the one that fits how you want to learn.
+
+### Sandbox mode (default) — isolated practice lab
+
+The agent sets up an isolated Git branch or `.speclearn/sandbox/` directory. Your main branch stays untouched while you work through the exercises.
+
+```yaml
+mode: sandbox  # default — can be omitted
+```
+
+This is the right choice for:
+- Learning a new concept without touching production code
+- Running a team-shared course where each developer practices independently
+- Exploring patterns before applying them to your real codebase
+
+### Workspace mode — guided real-feature delivery
+
+The agent guides edits **directly inside your repository's real files** while still acting as a Socratic mentor. It won't write the full implementation for you — it coaches you through building a real feature step by step, keeping the git diff PR-ready.
+
+```yaml
+mode: workspace
+modules:
+  - id: add-payment-domain
+    title: Add the Payment Domain Layer
+    target_files:
+      - src/domain/payment.ts
+      - src/ports/payment-gateway.ts
+    verification:
+      test_command: pnpm test tests/payment.test.ts
+      regression_command: pnpm test   # runs your full suite after feature tests pass
+      rubric_checks:
+        - No leaky abstractions across the domain boundary
+        - Payment entity enforces its own business rules
+```
+
+`target_files` tells the agent exactly which files in your repo belong to this module. The agent won't write outside those files. `regression_command` runs your full test suite after the module's feature tests pass — a regression failure blocks completion so you know immediately if your change broke something upstream.
+
+### Switching modes for a single session
+
+You can override the course's configured mode without changing the shared course file. This is useful for external or team-shared courses where you want to try a different setup:
+
+```bash
+# Start a course in workspace mode (even if the course file says sandbox)
+npx speclearn start my-course.course.yaml --workspace
+
+# Start a course in sandbox mode (even if the course file says workspace)
+npx speclearn start shared-course.course.yaml --sandbox
+```
+
+The override is saved in your local `.speclearn/state/` only — it never modifies the shared course file.
+
+---
+
 ## CLI Command Reference
 
 SpecLearn is a deterministic, zero-LLM CLI compiler and test runner.

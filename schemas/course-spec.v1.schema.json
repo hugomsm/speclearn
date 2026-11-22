@@ -45,6 +45,14 @@
           "minLength": 1,
           "default": "auto"
         },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "sandbox",
+            "workspace"
+          ],
+          "default": "sandbox"
+        },
         "context_sources": {
           "type": "object",
           "properties": {
@@ -124,6 +132,13 @@
                   "minLength": 1
                 }
               },
+              "target_files": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
               "verification": {
                 "type": "object",
                 "properties": {
@@ -144,6 +159,10 @@
                       "type": "string",
                       "minLength": 1
                     }
+                  },
+                  "regression_command": {
+                    "type": "string",
+                    "minLength": 1
                   }
                 },
                 "required": [

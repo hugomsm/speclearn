@@ -21,6 +21,7 @@ export const progressModuleSchema = z.object({
 export const progressStateSchema = z.object({
   active_course_id: z.string().nullable().default(null),
   active_course_path: z.string().optional(),
+  mode: z.enum(["sandbox", "workspace"]).optional(),
   sandbox: z
     .object({
       branch: z.string().optional(),
