@@ -86,7 +86,7 @@ export function renderProgressBar(state: ProgressState, width = 24): string {
 
 export function renderDagStatus(state: ProgressState): string {
   if (!state.active_course_id) {
-    return "No active course. Run speclearn init and activate a course.";
+    return "No course is active. Run speclearn init and start a course.";
   }
   if (state.modules.length === 0) {
     return `${state.active_course_id}\n└── No modules available`;

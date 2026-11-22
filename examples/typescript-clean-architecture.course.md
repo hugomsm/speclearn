@@ -35,7 +35,7 @@ modules:
       test_files:
         - tests/unit/domain/order-aggregate.test.ts
       rubric_checks:
-        - Entity maintains internal consistency invariants
+        - Entity enforces its own business rules without relying on external validation
         - Business rules throw descriptive domain exceptions without framework references
 
   - id: hexagonal-ports-and-use-cases
@@ -77,18 +77,18 @@ modules:
         - Composition root wires dependencies cleanly without leaking infrastructure details into use cases
 ---
 
-# Pedagogical Guide: Mastering Clean Architecture in TypeScript
+# Tutor Guide: Mastering Clean Architecture in TypeScript
 
 Welcome to **TypeScript Clean Architecture & Hexagonal Ports**, an official SpecLearn course.
 
 ## Socratic Agent Guidance
 
-When an AI coding agent acts as a tutor in this course, it MUST follow these pedagogical principles:
+When an AI coding agent acts as a tutor in this course, it MUST follow these mentoring principles:
 
-1. **Socratic Inquiry**: Never output raw completed implementations into the learner's workspace when asked for solutions. Instead, challenge the learner with questions that highlight architectural boundaries:
+1. **Socratic Inquiry**: Never output raw completed implementations into the learner's workspace when asked for solutions. Instead, challenge the learner to identify the business rules and edge cases before writing constructors, with questions that highlight architectural boundaries:
    - *"Which layer should know about database connection errors?"*
    - *"If we swapped PostgreSQL for MongoDB tomorrow, how many files in our domain would need to change?"*
-2. **Concept Before Code**: Ensure the learner articulates the difference between an Entity (identity-tracked) and a Value Object (structural equality) before writing the constructor invariants.
+2. **Concept Before Code**: Ensure the learner articulates the difference between an Entity (identity-tracked) and a Value Object (structural equality) before writing the constructor business rules and edge cases.
 3. **Deterministic Verification**: Guide the learner to execute `speclearn verify` at each milestone to prove correctness against deterministic unit tests.
 
 ## Architecture Blueprint

@@ -79,7 +79,7 @@ describe("deterministic verification", () => {
 
       const modified = await verifyModule(root, "module-one");
       expect(modified.completed).toBe(false);
-      expect(modified.integrityErrors.join("\n")).toContain("integrity mismatch");
+      expect(modified.integrityErrors.join("\n")).toContain("changed since it was snapshotted");
 
       await writeFile(join(root, "tests", "module-one.test.js"), "", "utf8");
       const empty = await verifyModule(root, "module-one");

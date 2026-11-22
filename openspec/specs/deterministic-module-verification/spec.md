@@ -28,12 +28,12 @@ The verifier SHALL execute the module's `verification.test_command` locally and 
 - **THEN** the CLI SHALL report a verification failure with diagnostic output and SHALL not mark the module completed
 
 ### Requirement: Verification result reporting
-The CLI SHALL report test success or failure in a stable, terminal-readable format.
+The CLI SHALL report test success or failure in a stable, terminal-readable format using plain language that describes outcomes in terms of learning progress.
 
 #### Scenario: Tests pass
-- **WHEN** test execution returns exit code 0 and integrity validation passes
-- **THEN** the CLI SHALL mark the module completed and SHALL display the updated progress graph
+- **WHEN** test execution returns exit code 0 and tamper-proof test verification passes
+- **THEN** the CLI SHALL mark the module completed and SHALL display the updated learning path
 
 #### Scenario: Tests fail
 - **WHEN** test execution returns an exit code other than 0
-- **THEN** the CLI SHALL report stdout and stderr, SHALL preserve module completion state, and SHALL ask no completion claim
+- **THEN** the CLI SHALL report stdout and stderr, SHALL preserve module completion state, and SHALL not claim completion

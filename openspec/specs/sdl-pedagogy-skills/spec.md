@@ -30,7 +30,7 @@ The `/slx:propose` skill SHALL inspect the repository, ask no more than three ca
 - **WHEN** repository context and calibration answers are available
 - **THEN** the agent SHALL generate `.speclearn/specs/<id>.course.md` or `.speclearn/specs/<id>.course.yaml`, using a kebab-case course ID as the filename
 - **AND** SHALL separate universal concepts from architecture-specific context
-- **AND** SHALL include all required COURSE-SPEC metadata, at least one valid module, and a non-empty pedagogical guide for Markdown courses
+- **AND** SHALL include all required COURSE-SPEC metadata, at least one valid module, and a non-empty tutor guidance section for Markdown courses
 
 #### Scenario: Generated spec is validated
 - **WHEN** the course file has been generated
@@ -52,7 +52,7 @@ The `/slx:start` skill SHALL guide learning through measurement, planning, and s
 
 #### Scenario: Tailored path is planned
 - **WHEN** a module is measured
-- **THEN** the skill SHALL display the remaining prerequisite-aware module path
+- **THEN** the skill SHALL display the remaining prerequisite-aware learning path
 
 #### Scenario: Teaching begins
 - **WHEN** the student is ready to learn
@@ -62,7 +62,7 @@ The `/slx:start` skill SHALL guide learning through measurement, planning, and s
 #### Scenario: Exercise is scaffolded
 - **WHEN** the skill prepares a lab exercise
 - **THEN** it SHALL insert `# TODO(speclearn)` markers and failing tests instead of full solution code
-- **AND** SHALL withhold complete solution code until the verification boundary is reached
+- **AND** SHALL withhold complete solution code until the verification checkpoint is reached
 
 ### Requirement: Explain skill workflow
 The `/slx:explain [concept]` skill SHALL pause the project lab and teach a concept in an isolated scratchpad before returning.
@@ -80,13 +80,13 @@ The `/slx:explain [concept]` skill SHALL pause the project lab and teach a conce
 The `/slx:verify` skill SHALL invoke deterministic verification and SHALL provide Socratic feedback based on process results.
 
 #### Scenario: Verification succeeds
-- **WHEN** `npx speclearn verify [module-id]` exits successfully and test-file integrity passes
+- **WHEN** `npx speclearn verify [module-id]` exits successfully and tamper-proof test verification passes
 - **THEN** the agent SHALL review the git diff against the module's rubric checks
 - **AND** SHALL ask one final conceptual consolidation question
-- **AND** SHALL display the updated progress graph
+- **AND** SHALL display the updated learning path
 
 #### Scenario: Verification is inconclusive
-- **WHEN** tests fail or test-file integrity cannot be verified
+- **WHEN** tests fail or tamper-proof test verification cannot be confirmed
 - **THEN** the skill SHALL not mark the module completed
 
 #### Scenario: Verification fails
@@ -95,5 +95,5 @@ The `/slx:verify` skill SHALL invoke deterministic verification and SHALL provid
 - **AND** SHALL not edit the student's code or mark the module completed
 
 #### Scenario: Integrity verification fails
-- **WHEN** a test file is deleted, empty, or differs from its locked SHA-256 hash
-- **THEN** the agent SHALL explain the integrity failure and SHALL request restoration or re-locking through explicit project-authorized action
+- **WHEN** a test file is deleted, empty, or differs from its locked hash
+- **THEN** the agent SHALL explain that the test files appear to have been changed and SHALL request restoration or re-locking through explicit project-authorized action

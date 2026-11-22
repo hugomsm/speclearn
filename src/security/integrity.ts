@@ -61,7 +61,7 @@ export async function verifyTestFiles(
     return {
       valid: false,
       hashes: {},
-      errors: ["Test files are not locked. Run speclearn lock-tests before verification."],
+      errors: ["Test files haven't been snapshotted yet. Run speclearn lock-tests before verifying."],
     };
   }
 
@@ -75,7 +75,7 @@ export async function verifyTestFiles(
       const hash = await sha256File(absolute);
       hashes[key] = hash;
       if (lockedHashes[key] !== hash) {
-        errors.push(`Test file integrity mismatch: ${key}`);
+        errors.push(`Test file has changed since it was snapshotted: ${key}`);
       }
     } catch (error) {
       errors.push(error instanceof Error ? error.message : String(error));
