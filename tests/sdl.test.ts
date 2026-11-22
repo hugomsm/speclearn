@@ -14,8 +14,11 @@ const execFileAsync = promisify(execFile);
 
 describe("Core SDL skills", () => {
   it("includes language mirroring and complete pedagogy in all templates", () => {
-    for (const template of Object.values(SLX_COMMAND_TEMPLATES)) {
+    for (const [, template] of Object.entries(SLX_COMMAND_TEMPLATES)) {
       expect(template).toContain("Universal Language Mirroring");
+      const lineCount = template.trim().split("\n").length;
+      expect(lineCount).toBeGreaterThanOrEqual(30);
+      expect(lineCount).toBeLessThanOrEqual(55);
     }
 
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("no more than three");
@@ -27,13 +30,23 @@ describe("Core SDL skills", () => {
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("rerun validation");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("sandbox");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("workspace");
+
     expect(SLX_COMMAND_TEMPLATES.start).toContain("three-minute diagnostic");
     expect(SLX_COMMAND_TEMPLATES.start).toContain("# TODO(speclearn)");
     expect(SLX_COMMAND_TEMPLATES.start).toContain("workspace");
     expect(SLX_COMMAND_TEMPLATES.start).toContain("target_files");
+    expect(SLX_COMMAND_TEMPLATES.start).toContain("ONE focused question");
+    expect(SLX_COMMAND_TEMPLATES.start).toContain("Gradual Hint Escalation");
+    expect(SLX_COMMAND_TEMPLATES.start).toContain("Refuse Full Solution Code");
+
     expect(SLX_COMMAND_TEMPLATES.explain).toContain(".speclearn/scratchpad/");
+    expect(SLX_COMMAND_TEMPLATES.explain).toContain("Interactive Micro-Examples");
+    expect(SLX_COMMAND_TEMPLATES.explain).toContain("Check for Understanding");
+
     expect(SLX_COMMAND_TEMPLATES.verify).toContain("tamper-proof test verification");
     expect(SLX_COMMAND_TEMPLATES.verify).toContain("regression_command");
+    expect(SLX_COMMAND_TEMPLATES.verify).toContain("diagnostic question");
+    expect(SLX_COMMAND_TEMPLATES.verify).toContain("consolidation question");
   });
 
   it("includes the shared language and verification guardrails", () => {
@@ -41,6 +54,7 @@ describe("Core SDL skills", () => {
     expect(guardrails).toContain("language");
     expect(guardrails).toContain("Only a passing verification run");
     expect(guardrails).toContain(".speclearn/scratchpad/");
+    expect(guardrails).toContain("complete solution code");
   });
 
   it("creates isolated scratchpad examples without touching production files", async () => {

@@ -44,6 +44,10 @@ Every built-in adapter SHALL generate complete `propose`, `start`, `explain`, an
 - **THEN** the adapter SHALL write standalone skills with YAML frontmatter under `.agents/skills/slx-propose/SKILL.md`, `.agents/skills/slx-start/SKILL.md`, `.agents/skills/slx-explain/SKILL.md`, and `.agents/skills/slx-verify/SKILL.md`
 - **AND** SHALL write managed system guardrails to `AGENTS.md` using plain developer language
 
+#### Scenario: Scannable template length contract
+- **WHEN** any adapter emits `/slx:*` command prompt templates
+- **THEN** each template SHALL maintain a concise, scannable length between approximately 35 and 50 lines that provides clear operational guardrails without bureaucratic verbosity
+
 ### Requirement: Managed guardrails
 Adapter output SHALL include system guardrails that prohibit LLM API calls inside the CLI binary, enforce scratchpad isolation, and require deterministic verification behavior.
 
@@ -58,6 +62,10 @@ Adapter output SHALL include system guardrails that prohibit LLM API calls insid
 #### Scenario: Scratchpad isolation is enforced
 - **WHEN** an adapter generates command or guardrail files
 - **THEN** the instructions SHALL strictly confine temporary files to `.speclearn/scratchpad/` and prohibit creating temporary files in production directories
+
+#### Scenario: Deduplicated shared guardrails
+- **WHEN** adapters render managed sections and template footers
+- **THEN** universal language mirroring and framework guardrails SHALL be deduplicated and shared cleanly across templates and managed sections
 
 ### Requirement: Consistent mentor tone across adapters
 All adapter-generated prompt files SHALL use the same terminology and voice so the agent sounds consistent regardless of which coding tool the student uses.

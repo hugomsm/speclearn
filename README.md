@@ -52,20 +52,32 @@ When `harness_rules.socratic_mode: true` is set in a course spec, the agent is c
 
 | Behavior | Standard Agent | Socratic Agent |
 | :--- | :--- | :--- |
-| **Implementation request** | Writes the full solution | Asks what business rules and edge cases the developer has considered |
+| **Implementation request** | Writes the full solution | Politely refuses full code and asks what business rules and edge cases to tackle first |
+| **Pacing & turn-taking** | Dumps multi-part plans or answers | Asks exactly one focused question at a time and waits for your response |
+| **When stuck** | Gives away the complete answer | Escalates hints in 3 tiers: conceptual question → architectural pointer → partial stub |
 | **Wrong approach detected** | Silently fixes it or accepts it | Poses a guiding question that exposes the flaw |
-| **Verification failure** | Diagnoses and patches the code | Analyses `stdout`/`stderr` and asks exactly one diagnostic question |
-| **Concept explanation** | Delivers a full explanation | Opens a minimal scratchpad experiment and walks through it step by step |
+| **Verification failure** | Diagnoses and patches the code | Analyzes `stdout`/`stderr` and asks exactly one diagnostic question without editing code |
+| **Concept explanation** | Delivers a long lecture | Runs interactive micro-examples (≤15 lines) in `.speclearn/scratchpad/` with an understanding check |
 | **Module completion** | At the developer's request | Only after deterministic test execution exits `0` with tamper-proof test verification |
+
+### Socratic Pacing & Hint Escalation in `/slx:start`
+
+When you begin or work through a module:
+1. **One Question at a Time**: The mentor asks a single focused question and waits for your response before scaffolding further.
+2. **Gradual Hint Escalation**:
+   - *Tier 1 (Conceptual)*: Explores domain rules, invariants, and edge cases.
+   - *Tier 2 (Architectural)*: Points to relevant contracts, function signatures, or test files.
+   - *Tier 3 (Scaffolding)*: Introduces runnable `# TODO(speclearn)` stubs or failing tests—never working solutions.
+3. **Refusal of Solution Spoilers**: If you ask the mentor to write the code for you, it redirects you back to the active problem so you build genuine muscle memory.
 
 ### The Socratic loop in `/slx:explain`
 
-The `/slx:explain` command explicitly activates a **Socratic loop**:
+The `/slx:explain` command activates an isolated learning scratchpad:
 
-1. The agent pauses the active lab and opens an isolated scratchpad under `.speclearn/scratchpad/`.
-2. It prompts the learner first — asking what they already know or expect — before introducing any theory.
-3. It explains in small, testable steps, letting the student run each experiment before proceeding.
-4. Once the concept is understood, the agent summarises the insight and returns to the active module.
+1. The agent pauses the active lab and opens a minimal file strictly under `.speclearn/scratchpad/` (never touching production or target files).
+2. It prompts you first—asking what you expect a pattern or construct to do—before introducing theory.
+3. It demonstrates the concept through runnable micro-examples (≤15 lines), letting you experiment.
+4. Before concluding, it asks a check-for-understanding question to confirm the insight, then smoothly returns you to the active lab.
 
 ### Disabling Socratic mode
 
