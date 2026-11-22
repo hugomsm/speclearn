@@ -1,5 +1,11 @@
 # speclearn
 
+## 0.3.2
+
+### Patch Changes
+
+- 8dd6aea: Simplifying the project's technical language
+
 ## 0.3.1
 
 ### Patch Changes
