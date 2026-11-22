@@ -6,8 +6,14 @@ context: |
   Project: SpecLearn — The Spec-Driven Learning (SDL) Framework for Coding Agents.
   Language Policy: All source code, comments, CLI outputs, OpenSpec artifacts, and documentation MUST be written in clear, idiomatic English.
 
+  Tone & Terminology Policy:
+  - Keep `Spec-Driven Learning (SDL)` and `COURSE-SPEC` as the core framework and specification terms.
+  - Write user-facing copy, Socratic prompts, CLI messages, and docs in plain, approachable, everyday developer language accessible to students and junior-to-mid developers.
+  - Prefer `business rules and edge cases` over `system invariants` or `invariants`, `Socratic mentor rules` over `pedagogical harness`, and `learning path` over `progress graph` in user-facing text.
+  - Frame test integrity around its practical benefit (`tamper-proof test verification`), keeping `SHA-256` and low-level plumbing details in technical/verbose diagnostics rather than leading with jargon.
+
   Tech Stack (Strict):
-  - Runtime & Language: Node.js (>= 24 LTS) + TypeScript 5.x (Strict mode, ESM modules).
+  - Runtime & Language: Node.js (greater than or equal to 24 LTS) + TypeScript 5.x (Strict mode, ESM modules).
   - Package Manager: pnpm.
   - Build Tool: tsup (bundles CLI into a single fast ESM executable `dist/cli.js` with `#!/usr/bin/env node`).
   - CLI & Terminal UI: `commander` + `@clack/prompts` + `picocolors`.
@@ -20,3 +26,11 @@ context: |
   2. Multi-Agent Agnostic: Compiles `/slx:*` (SpecLearn eXperience) slash commands/skills natively for Claude Code (`.claude/commands/`), GitHub Copilot (`.github/prompts/`), Cursor (`.cursor/rules/`) and other code harnesses.
   3. Anti-Cheat Verification: Only `speclearn verify` can mark a module as completed in `.speclearn/state/progress.json` after executing the module's `test_command` with exit code 0 and verifying SHA-256 test file integrity.
   4. Brand & Company Neutral: Zero proprietary or company-specific references in the core repository.
+
+rules:
+  proposal:
+    - Keep user-facing descriptions clear and jargon-light while preserving `Spec-Driven Learning (SDL)` and `COURSE-SPEC`.
+  specs:
+    - Use plain developer terminology (`business rules and edge cases`, `Socratic mentor rules`, `learning path`) in user-facing requirements and scenarios.
+  tasks:
+    - Include updates to `README.md` or `/docs` whenever user-facing behavior, commands, or modes change.

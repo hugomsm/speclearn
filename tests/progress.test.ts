@@ -56,7 +56,7 @@ describe("SpecLearn progress state", () => {
     expect(renderDagStatus(active)).toContain("generics: available");
 
     const inactive = progressStateSchema.parse({});
-    expect(renderDagStatus(inactive)).toContain("No active course");
+    expect(renderDagStatus(inactive)).toContain("No course is active");
   });
 
   it("writes state atomically and preserves state fields", async () => {

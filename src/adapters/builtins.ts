@@ -117,11 +117,11 @@ export const genericAdapter: AgentAdapter = {
     const commands = {
       propose: {
         name: "slx-propose",
-        description: "Propose a new SpecLearn course based on repository architecture and ADRs",
+        description: "Propose a new SpecLearn course grounded in your repository's real stack and ADRs",
       },
       start: {
         name: "slx-start",
-        description: "Activate an isolated SpecLearn course module environment",
+        description: "Start a course module in an isolated learning environment",
       },
       explain: {
         name: "slx-explain",
@@ -129,7 +129,7 @@ export const genericAdapter: AgentAdapter = {
       },
       verify: {
         name: "slx-verify",
-        description: "Run deterministic verification for the active course module",
+        description: "Check your work: run tests and record module completion",
       },
     };
 

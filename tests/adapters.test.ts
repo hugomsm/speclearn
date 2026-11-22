@@ -107,7 +107,7 @@ describe("SpecLearn agent adapters", () => {
       expect(claudePropose).toContain("Universal Language Mirroring");
       expect(copilotStart).toContain("three-minute diagnostic");
       expect(antigravityExplain).toContain(".speclearn/scratchpad/");
-      expect(cursorRules).toContain("SHA-256");
+      expect(cursorRules).toContain("tamper-proof test verification");
     } finally {
       await rm(root, { recursive: true, force: true });
     }

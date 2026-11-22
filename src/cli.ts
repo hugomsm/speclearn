@@ -110,7 +110,7 @@ export function createCli(): Command {
 
         const spinner = isInteractive ? clack.spinner() : null;
         if (spinner) {
-          spinner.start("Bootstrapping agent skills and guardrails...");
+          spinner.start("Setting up skills and guardrails...");
         }
 
         await initializeWorkspace({ projectRoot: process.cwd(), agents: agentIds });
@@ -119,7 +119,7 @@ export function createCli(): Command {
         if (spinner) {
           spinner.stop(
             agentIds.length > 0
-              ? `Bootstrapped ${agentIds.join(", ")} skills and guardrails`
+              ? `Set up ${agentIds.join(", ")} skills and guardrails`
               : "SpecLearn workspace initialized (no agent adapters selected)",
           );
         }
@@ -164,12 +164,12 @@ export function createCli(): Command {
 
   program
     .command("status")
-    .description("Display local SpecLearn learning progress")
+    .description("Show your current learning progress")
     .action(async () => {
       try {
         const state = await readProgress(process.cwd());
         if (!state) {
-          clack.log.warning("No progress state found. Run speclearn init first.");
+          clack.log.warning("No learning progress found. Run speclearn init first.");
           return;
         }
         console.log(renderProgressBar(state));
@@ -182,13 +182,13 @@ export function createCli(): Command {
 
   program
     .command("verify")
-    .description("Run deterministic verification for a course module")
+    .description("Run your tests and record module completion if they pass")
     .argument("[module-id]", "module ID; defaults to the active module")
     .action(async (moduleId?: string) => {
       try {
         const result = await verifyModule(process.cwd(), moduleId);
         if (result.integrityErrors.length > 0) {
-          clack.log.error(pc.red("Test integrity verification failed"));
+          clack.log.error(pc.red("Test files have changed — verification stopped"));
           for (const error of result.integrityErrors) {
             clack.log.message(pc.yellow(error));
           }
@@ -212,7 +212,7 @@ export function createCli(): Command {
 
   program
     .command("lock-tests")
-    .description("Lock SHA-256 hashes for a module's test files")
+    .description("Snapshot test files so tampering is caught during verification")
     .argument("[module-id]", "module ID; defaults to the active module")
     .action(async (moduleId?: string) => {
       try {

@@ -20,7 +20,7 @@ AI coding agents are dramatically accelerating software development. Through **S
 
 However, this breakthrough has created the **AI Engineering Paradox**:
 
-> **As code generation accelerates toward zero marginal cost, human architectural comprehension risks degrading.** When agents write 95% of the code, engineers become passive code reviewers who lose intuition for system invariants, edge-case resilience, and underlying domain models.
+> **As code generation accelerates toward zero marginal cost, human architectural comprehension risks degrading.** When agents write 95% of the code, engineers become passive code reviewers who lose intuition for business rules, edge cases, and underlying domain models.
 
 ### Why Legacy Learning Approaches Fail in the Agent Era
 
@@ -32,19 +32,19 @@ However, this breakthrough has created the **AI Engineering Paradox**:
 
 ## The Spec-Driven Learning (SDL) Manifesto
 
-**Spec-Driven Learning (SDL)** transforms specifications from mere code generation templates into **executable pedagogical curriculums**.
+**Spec-Driven Learning (SDL)** transforms specifications from mere code generation templates into **executable learning curriculums**.
 
 Under SDL:
 - **Specifications Drive Mastery**: Specifications define learning outcomes, universal tech concepts, and architectural constraints.
-- **Agents Act as Socratic Mentors**: Guided by harness rules, agents challenge you with probing questions, provide conceptual hints, and refuse full-code spoilers.
-- **Verification is Deterministic**: Learning progression is unlocked only when local unit, integration, and architecture tests pass exit code `0` with cryptographic SHA-256 test integrity.
+- **Agents Act as Socratic Mentors**: Guided by Socratic mentor rules, agents challenge you with probing questions, provide conceptual hints, and refuse full-code spoilers.
+- **Verification is Deterministic**: Learning progression is unlocked only when local unit, integration, and architecture tests pass exit code `0` with tamper-proof test verification.
 - **Dual-Layer Context**: Learning blends universal software engineering concepts (DDD, Circuit Breakers, Monads) with your team's live architectural context (ADRs, MCP resources, and real codebases).
 
 ---
 
 ## What is a Socratic Agent?
 
-A **Socratic Agent** is a coding agent (Claude Code, GitHub Copilot, Antigravity, Cursor, or any agent supporting the open `.agents/skills/` standard) operating under a strict pedagogical harness defined by a COURSE-SPEC. Instead of acting as an autonomous code generator, it adopts the role of a **Socratic mentor** — following the same method used by Socrates: leading the learner to understanding through targeted questions, structured hints, and guided experimentation, rather than delivering answers directly.
+A **Socratic Agent** is a coding agent (Claude Code, GitHub Copilot, Antigravity, Cursor, or any agent supporting the open `.agents/skills/` standard) operating under Socratic mentor rules defined by a COURSE-SPEC. Instead of acting as an autonomous code generator, it adopts the role of a **Socratic mentor** — following the same method used by Socrates: leading the learner to understanding through targeted questions, structured hints, and guided experimentation, rather than delivering answers directly.
 
 ### How it works in practice
 
@@ -52,11 +52,11 @@ When `harness_rules.socratic_mode: true` is set in a course spec, the agent is c
 
 | Behavior | Standard Agent | Socratic Agent |
 | :--- | :--- | :--- |
-| **Implementation request** | Writes the full solution | Asks what invariants or edge cases the developer has considered |
+| **Implementation request** | Writes the full solution | Asks what business rules and edge cases the developer has considered |
 | **Wrong approach detected** | Silently fixes it or accepts it | Poses a guiding question that exposes the flaw |
 | **Verification failure** | Diagnoses and patches the code | Analyses `stdout`/`stderr` and asks exactly one diagnostic question |
 | **Concept explanation** | Delivers a full explanation | Opens a minimal scratchpad experiment and walks through it step by step |
-| **Module completion** | At the developer's request | Only after deterministic test execution exits `0` with valid SHA-256 integrity |
+| **Module completion** | At the developer's request | Only after deterministic test execution exits `0` with tamper-proof test verification |
 
 ### The Socratic loop in `/slx:explain`
 
@@ -78,7 +78,7 @@ harness_rules:
 ```
 
 > [!NOTE]
-> Even with `socratic_mode: false`, the **deterministic verification boundary is never bypassed**: the agent still cannot mark a module as completed without the CLI's SHA-256 test integrity check passing. The Socratic constraint governs *how* the agent teaches, not *how* completion is validated.
+> Even with `socratic_mode: false`, the **verification checkpoint is never bypassed**: the agent still cannot mark a module as completed without the CLI's tamper-proof test verification check passing. The Socratic constraint governs *how* the agent teaches, not *how* completion is validated.
 
 ---
 
@@ -91,8 +91,8 @@ harness_rules:
 | **Agent Role** | None (Static pre-recorded videos) | Autonomous code generator | Socratic mentor & real-time architecture coach |
 | **Feedback Loop** | Multiple-choice quizzes / None | Git diff inspection | Socratic dialogue + instant test execution |
 | **Context Integration** | Isolated toy browser playground | Target codebase | **Dual-Layer**: Tech concepts + Real repo MCP/ADRs |
-| **Anti-Cheat Verification** | Honor system | CI unit tests on agent output | Deterministic test runner + SHA-256 test integrity |
-| **Harness Compatibility** | Web browser only | Terminal / agent-specific | Universal (Claude Code, GitHub Copilot, Antigravity, Cursor, and any agent via `.agents/skills/`) |
+| **Anti-Cheat Verification** | Honor system | CI unit tests on agent output | Deterministic test runner + tamper-proof test verification |
+| **Agent Tool Compatibility** | Web browser only | Terminal / agent-specific | Universal (Claude Code, GitHub Copilot, Antigravity, Cursor, and any agent via `.agents/skills/`) |
 
 ---
 
@@ -104,11 +104,11 @@ SpecLearn guides the developer through a structured cycle designed to build dura
 
 ```mermaid
 flowchart TD
-    A["1. MEASURE\n(Baseline & Prior Knowledge)"] --> B["2. PLAN\n(Personalized DAG Curriculum)"]
+    A["1. MEASURE\n(Baseline & Prior Knowledge)"] --> B["2. PLAN\n(Personalized Learning Path)"]
     B --> C["3. TEACH & SCAFFOLD\n(Socratic Prompts & Guardrails)"]
     C --> D["4. VERIFY\n(Deterministic Test Execution)"]
     D -- "Test Fails" --> C
-    D -- "Passes (Exit Code 0 + SHA-256 Valid)" --> E["Advance Progress State\n(.speclearn/state/progress.json)"]
+    D -- "Passes (Exit Code 0 + Tests Verified)" --> E["Advance Progress State\n(.speclearn/state/progress.json)"]
     E --> B
 ```
 
@@ -130,7 +130,7 @@ graph LR
             A3["Production Codebase"]
         end
     end
-    L1 --> AGENT["Socratic Agent Harness\n(Claude / Copilot / Antigravity / Cursor / Any Agent)"]
+    L1 --> AGENT["Socratic Agent Mentor\n(Claude / Copilot / Antigravity / Cursor / Any Agent)"]
     L2 --> AGENT
     AGENT --> LEARNER["Developer / Learner in IDE"]
 ```
@@ -217,20 +217,20 @@ modules:
       test_files:
         - tests/unit/domain/order-aggregate.test.ts
       rubric_checks:
-        - Entity maintains internal consistency invariants
+        - Entity enforces its own business rules without relying on external validation
         - Business rules throw domain exceptions without framework imports
 ---
 
-# Pedagogical Guide: TypeScript Clean Architecture
+# Tutor Guide: TypeScript Clean Architecture
 
 Welcome! When teaching this course, the agent MUST:
-1. Challenge the learner to identify invariants before writing constructors.
+1. Challenge the learner to identify the business rules and edge cases before writing constructors.
 2. Refuse to write complete implementation files into the workspace.
 3. Prompt the user to run `/slx:verify` when unit tests are implemented.
 ```
 
 Explore our canonical examples in [`examples/`](examples/):
-- [`examples/typescript-clean-architecture.course.md`](examples/typescript-clean-architecture.course.md): Hybrid Markdown course with embedded pedagogical guide.
+- [`examples/typescript-clean-architecture.course.md`](examples/typescript-clean-architecture.course.md): Hybrid Markdown course with embedded tutor guide.
 - [`examples/python-async-resilience.course.yaml`](examples/python-async-resilience.course.yaml): Pure YAML course spec modeling Python 3.11+ async resilience.
 
 ---
@@ -243,9 +243,10 @@ SpecLearn is a deterministic, zero-LLM CLI compiler and test runner.
 | :--- | :--- |
 | `speclearn init` | Initialize SpecLearn configuration and agent adapters in current repo |
 | `speclearn validate <path>` | Validate a `.course.md` or `.course.yaml` against COURSE-SPEC standard |
-| `speclearn status` | Display current course progress bar, DAG module statuses, and scores |
+| `speclearn status` | Show current course progress bar, module tree statuses, and scores |
 | `speclearn start <module-id>` | Activate a course module and initialize concept scratchpads |
-| `speclearn verify [module-id]` | Execute deterministic tests and record completion with SHA-256 integrity |
+| `speclearn verify [module-id]` | Run your tests and record completion with tamper-proof verification |
+| `speclearn lock-tests [module-id]` | Snapshot test files so tampering is caught during verification |
 | `speclearn skip <module-id>` | Skip a module and record reason in progress state |
 
 ---

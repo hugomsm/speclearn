@@ -21,20 +21,20 @@ describe("Core SDL skills", () => {
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("no more than three");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain(".speclearn/specs/<id>.course.md");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("YAML frontmatter");
-    expect(SLX_COMMAND_TEMPLATES.propose).toContain("pedagogical guide");
+    expect(SLX_COMMAND_TEMPLATES.propose).toContain("tutor guidance");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("test_command");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("Do not invent project architecture");
     expect(SLX_COMMAND_TEMPLATES.propose).toContain("rerun validation");
     expect(SLX_COMMAND_TEMPLATES.start).toContain("three-minute diagnostic");
     expect(SLX_COMMAND_TEMPLATES.start).toContain("# TODO(speclearn)");
     expect(SLX_COMMAND_TEMPLATES.explain).toContain(".speclearn/scratchpad/");
-    expect(SLX_COMMAND_TEMPLATES.verify).toContain("SHA-256");
+    expect(SLX_COMMAND_TEMPLATES.verify).toContain("tamper-proof test verification");
   });
 
   it("includes the shared language and verification guardrails", () => {
     const guardrails = guardedContent();
     expect(guardrails).toContain("language");
-    expect(guardrails).toContain("Only deterministic verification");
+    expect(guardrails).toContain("Only a passing verification run");
   });
 
   it("creates isolated scratchpad examples without touching production files", async () => {
